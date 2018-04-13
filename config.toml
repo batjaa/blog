@@ -1,12 +1,13 @@
 baseURL = "http://example.com/"
 languageCode = "en-us"
 title = "Minimal"
-theme = "minimal"
+theme = "mongkok"
 disqusShortname = "username" # delete this to disable disqus comments
 googleAnalytics = ""
 
 [params]
     author = "Batjaa Batbold"
+    signature = "Batjargal Batbold"
     description = "Personal blog theme powered by Hugo"
     githubUsername = "#batjaa"
     accent = "red"
