@@ -8,8 +8,12 @@ googleAnalytics = ""
 [params]
     author = "Batjaa Batbold"
     signature = "Batjargal Batbold"
-    description = "Personal blog theme powered by Hugo"
+    description = "Engineer & Travel/Photo/Video/Coffee Enthusiast"
+    favicon = "https://secure.gravatar.com/avatar/44f8f75c884a13de29f4a310083cd82e?s=16"
     githubUsername = "#batjaa"
+    email = "batjaa.batbold@gmail.com"
+    phone = "+1 804 505 0615"
+    website = "batjaa.com"
     accent = "red"
     showBorder = true
     backgroundColor = "white"
