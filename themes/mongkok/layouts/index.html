@@ -10,9 +10,7 @@
 
             <div class="ticker">
               {{ range where .Pages "Section" "iam" }}
-                <h1 class="name">
-                  <span class="span-text">{{ .Title }}</span>
-                </h1>
+                <h1 class="name"><span class="span-text">{{ .Title }}</span></h1>
               {{ end }}
             </div>
 
@@ -140,12 +138,11 @@
           <h2 class="h2-style">Portfolio</h2>
           <div class="loading-indicator"></div>
           <ul class="categories list-inline">
-            <li><a href="#" data-cat="featured">Featured</a></li>
-            <li><a href="#" data-cat="web-design">Web Design</a></li>
-            <li><a href="#" data-cat="photography">Photography</a></li>
-            <li><a href="#" data-cat="ios-android-app">iOS / Android App</a></li>
-            <li><a href="#" data-cat="illustrations">Illustrations</a></li>
-            <li><a href="#" data-cat="free-layout">Free Layout</a></li>
+            {{ range $name, $taxonomy := .Site.Taxonomies.portfolios }}
+                {{ with $.Site.GetPage (printf "/portfolios/%s" $name) }}
+                  <li><a href="#" data-src="{{ .Permalink }}" data-cat="{{ $name }}">{{ $name }}</a></li>
+                {{ end }}
+            {{ end }}
           </ul>
           <ul class="ajax-portfolio-item-list clearfix">
           </ul>

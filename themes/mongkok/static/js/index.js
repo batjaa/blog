@@ -120,6 +120,7 @@ define(['jquery', 'hammer', 'bootstrap', 'setup', 'resize-text', 'bar-chart', 'd
 
 		// Portfolio
 		$('#portfolio').portfolio(portfolioSettings);
+		$('#blog').portfolio(portfolioSettings);
 
 		// CSS Books
 		$('figure.css-book').cssBook(cssBookSettings);

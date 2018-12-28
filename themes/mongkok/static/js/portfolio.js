@@ -8,7 +8,7 @@
 ;(function ( $, window, undefined ) {
 	var document = window.document,
 	defaults = {
-		overlay: '#portfolio .loading-indicator',
+		overlay: '.loading-indicator',
 		categories: 'ul.categories',
 		itemList: 'ul.ajax-portfolio-item-list',
 		itemDetails: 'article.ajax-portfolio-item-details',
@@ -35,10 +35,10 @@
 		this.options = $.extend( {}, defaults, options) ;
 		this._defaults = defaults;
 
-		this.$overlay = $(this.options.overlay);
-		this.$cats = $(this.options.categories);
-		this.$itemList = $(this.options.itemList);
-		this.$itemDetails = $(this.options.itemDetails);
+		this.$overlay = this.$elem.find(this.options.overlay);
+		this.$cats = this.$elem.find(this.options.categories);
+		this.$itemList = this.$elem.find(this.options.itemList);
+		this.$itemDetails = this.$elem.find(this.options.itemDetails);
 		this.$sectionContainer = $(this.options.sectionContainer);
 
 		this.currentListHtml = '';
