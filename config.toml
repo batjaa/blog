@@ -22,6 +22,10 @@ googleAnalytics = ""
     highlightStyle = "solarized-dark"
     highlightLanguages = ["go", "haskell", "kotlin", "scala", "swift"]
 
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
 [[menu.main]]
     url = "/"
     name = "Home"
