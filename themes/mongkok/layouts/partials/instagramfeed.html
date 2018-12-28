@@ -1,0 +1,8 @@
+{{ $urlPre := "https://api.instagram.com/v1/users/self/media/recent?access_token=" }}
+{{ $id := .Site.Params.instagramToken }}
+{{ $inst := getJSON $urlPre $id }}
+{{ range first 8 $inst.data }}
+  <li>
+    <a href="{{ .images.standard_resolution.url }}" class="lightbox lightbox-image" title="{{ .caption.text }}"><img src="{{ .images.low_resolution.url }}"></a>
+  </li>
+{{ end }}
