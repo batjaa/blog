@@ -1,0 +1,8 @@
+<h3 class="h3-style">Get Social</h3>
+<ul class="social list-inline">
+  {{ range sort .Site.Params.social "weight" "desc" }}
+    {{ if .url }}
+      <li><a href="{{ .url }}" class="{{ .name }}" data-hover="{{ htmlUnescape .hover }}" target="_blank"><i class="fa {{ .icon }}"></i></a></li>
+    {{ end }}
+  {{ end }}
+</ul>
