@@ -1,4 +1,4 @@
 ---
-title: "World Wanderer"
+title: "Wanderering the world"
 weight: 0
 ---

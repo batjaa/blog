@@ -1,4 +1,4 @@
 ---
-title: "Hobbyist photographer"
+title: "Capturing moments"
 weight: 4
 ---
