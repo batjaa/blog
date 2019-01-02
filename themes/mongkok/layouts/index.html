@@ -17,7 +17,7 @@
             <!-- Uncomment the following line if you need to use static text instead of ticker -->
             <!-- <h1 class="name"><span class="span-text">John Doe</span></h1> -->
 
-            <p class="after-name"><span class="span-text title-font">{{ .Site.Params.description }}</span></p>
+            <p class="after-name"><span class="span-text title-font">{{ with .Site.GetPage "/iam/_index.html" }}{{ .Content }}{{ end }}</span></p>
 
             <div class="row info">
               <div class="col-md-4">
