@@ -95,19 +95,6 @@ define(['jquery', 'hammer', 'bootstrap', 'setup', 'resize-text', 'bar-chart', 'd
 				height: '80%',
 				maxWidth: '90%',
 				maxHeight: '90%',
-			},
-
-			googleMapsSettings = {
-				styled: true,
-				latitude: 22.319252,
-				longitude: 114.169355,
-				zoom: 15,
-				hue: primaryColor.toRgbaString(),
-				gamma: 1.75,
-				saturation: -80,
-				lightness: -10,
-				invertLightness: false,
-				infoWindowContentString: '<h4>Info Window</h4>' + '<p>You can add content here</p>',
 			};
 
 		// Setup
@@ -129,12 +116,6 @@ define(['jquery', 'hammer', 'bootstrap', 'setup', 'resize-text', 'bar-chart', 'd
 		$('a.lightbox-image').colorbox(lightboxImageSettings);
 		$('a.lightbox-video').colorbox(lightboxVideoSettings);
 		$('a.lightbox-webpage').colorbox(lightboxWebpageSettings);
-
-		// Activate Google Maps
-		var mapCanvas = $('#map-canvas');
-		if (mapCanvas.length > 0){
-			mapCanvas.googleMaps(googleMapsSettings);
-		}
 
 		window.textResized = 0;
 		// Resize text
@@ -162,5 +143,7 @@ define(['jquery', 'hammer', 'bootstrap', 'setup', 'resize-text', 'bar-chart', 'd
 				}
 			}, 100);
 		}, 200);
+
+		window.postLoad();
 	});
 });

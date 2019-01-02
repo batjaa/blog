@@ -3,8 +3,11 @@
 <link href='https://fonts.googleapis.com/css?family=PT+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Satisfy:400' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="css/colorbox.css">
-<link rel="stylesheet" href="css/index.css">
+
+{{ $style := resources.Get "css/colorbox.css" | resources.Minify | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $style.Permalink }}">
+{{ $style := resources.Get "css/index.css" | resources.Minify | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $style.Permalink }}">
 
 <!-- highlight.js -->
 {{ if .Site.Params.highlight | default false }}

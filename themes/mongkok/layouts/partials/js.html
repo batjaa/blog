@@ -9,4 +9,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
 {{ end }}
 
-<script data-main="js/config" src="js/require.js"></script>
+{{ $post := resources.Get "js/post.js" | resources.ExecuteAsTemplate "js/post.js" . }}
+<script src="{{ $post.Permalink }}"></script>
+
+{{ $config := resources.Get "js/config.js" | resources.ExecuteAsTemplate "js/config.js" . }}
+<script data-main="{{ $config.Permalink }}" src="js/require.js"></script>
