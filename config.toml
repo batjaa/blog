@@ -61,12 +61,125 @@ googleAnalytics = ""
     name = "twitter"
     weight = 3
 
-[[menu.icon]]
-    url = "https://www.linkedin.com/in/batjargalbatbold/"
-    name = "linkedin"
-    weight = 4
+# Social
 
-[[menu.icon]]
-    url = "https://stackoverflow.com/story/batjaa"
-    name = "stack-overflow"
-    weight = 5
+[[params.social]]
+  url = ""
+  name = "facebook"
+  icon = "fa-facebook"
+  hover = "&#xf09a;"
+  weight = 1
+[[params.social]]
+  url = "https://twitter.com/batjaabatbold/"
+  name = "twitter"
+  icon = "fa-twitter"
+  hover = "&#xf099;"
+  weight = 1
+[[params.social]]
+  url = "https://www.linkedin.com/in/batjargalbatbold/"
+  name = "linkedin"
+  icon = "fa-linkedin"
+  hover = "&#xf0e1;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "dribbble"
+  icon = "fa-dribbble"
+  hover = "&#xf17d;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "pinterest"
+  icon = "fa-pinterest"
+  hover = "&#xf0d2;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "flickr"
+  icon = "fa-flickr"
+  hover = "&#xf16e;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "weibo"
+  icon = "fa-weibo"
+  hover = "&#xf18a;"
+  weight = 1
+[[params.social]]
+  url = "https://github.com/batjaa/"
+  name = "github"
+  icon = "fa-github"
+  hover = "&#xf09b;"
+  weight = 19
+[[params.social]]
+  url = "https://www.instagram.com/batjaa.batbold/"
+  name = "instagram"
+  icon = "fa-instagram"
+  hover = "&#xf16d;"
+  weight = 20
+[[params.social]]
+  url = "https://stackoverflow.com/story/batjaa"
+  name = "stack-overflow"
+  icon = "fa-stack-overflow"
+  hover = "&#xf16c;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "tumblr"
+  icon = "fa-tumblr"
+  hover = "&#xf173;"
+  weight = 1
+[[params.social]]
+  url = "skype:batjaa_10"
+  name = "skype"
+  icon = "fa-skype"
+  hover = "&#xf17e;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "vimeo-square"
+  icon = "fa-vimeo"
+  hover = "&#xf194;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "xing"
+  icon = "fa-xing"
+  hover = "&#xf168;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "dropbox"
+  icon = "fa-dropbox"
+  hover = "&#xf16b;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "rss"
+  icon = "fa-rss"
+  hover = "&#xf09e;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "foursquare"
+  icon = "fa-foursquare"
+  hover = "&#xf180;"
+  weight = 1
+[[params.social]]
+  url = "https://vk.com/batjaa"
+  name = "vk"
+  icon = "fa-vk"
+  hover = "&#xf189;"
+  weight = 1
+[[params.social]]
+  url = ""
+  name = "renren"
+  icon = "fa-renren"
+  hover = "&#xf18b;"
+  weight = 1
+[[params.social]]
+  url = "https://www.youtube.com/c/BatjargalBatbold"
+  name = "youtube"
+  icon = "fa-youtube"
+  hover = "&#xf167;"
+  weight = 19
