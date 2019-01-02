@@ -1,0 +1,28 @@
+<h2 class="h2-style">Contact</h2>
+<div class="row">
+  <div class="col-md-7">
+    <h3 class="h3-style">Where I am Based</h3>
+    <div id="map-canvas"></div>
+  </div>
+  <div class="col-md-4 col-md-offset-1">
+    <h3 class="h3-style">Get in Touch</h3>
+    <table class="contact-info-table">
+      <tr>
+        <td><i class="fa fa-map-marker"></i></td>
+        <td>{{ .Site.Params.address }}</td>
+      </tr>
+      <tr>
+        <td><i class="fa fa-mobile-phone"></i></td>
+        <td>{{ .Site.Params.phone }}</td>
+      </tr>
+      <tr>
+        <td><i class="fa fa-envelope-o"></i></td>
+        <td><a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a></td>
+      </tr>
+      <tr>
+        <td><i class="fa fa-laptop"></i></td>
+        <td><a href="{{ .Site.Params.website }}">{{ .Site.Params.website }}</a></td>   
+      </tr>
+    </table>
+  </div>
+</div>
