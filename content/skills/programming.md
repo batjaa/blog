@@ -2,21 +2,21 @@
 title: "Programming"
 date: 2018-12-24T11:31:56-05:00
 draft: false
+weight: 1
 ---
 
-<p>I am a native speaker of <strong>Lipsum</strong>. Furthermore, I can speak a little bit of <strong>Aliquip</strong>, <strong>Eiusmod</strong>, <strong>Consquat</strong>, <strong>Voluptate</strong> and <strong>Excepteur</strong>.</p>
-<!-- The "id" attribute inside the following "dl" tag is required in order for the chart to work properly. -->
-<dl id="langSkills" class="chart progress-chart" data-symbol-font-awesome-class="fa-stop">
-  <dt>Lipsum</dt>
-  <dd>11</dd>
-  <dt>Aliquip</dt>
-  <dd>10</dd>
-  <dt>Eiusmod</dt>
-  <dd>8</dd>
-  <dt>Consquat</dt>
-  <dd>6</dd>
-  <dt>Voluptate</dt>
-  <dd>4</dd>
-  <dt>Excepteur</dt>
-  <dd>2</dd>
+<p>I am familiar with <strong>JavaScript</strong>, <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>PHP</strong>, <strong>Java</strong> and <strong>C#</strong>.</p>
+<dl id="codingSkills" class="chart bar-chart" style="display: none;">
+  <dt>JavaScript</dt>
+  <dd>95</dd>
+  <dt>HTML5</dt>
+  <dd>90</dd>
+  <dt>CSS3</dt>
+  <dd>90</dd>
+  <dt>PHP</dt>
+  <dd>80</dd>
+  <dt>Java</dt>
+  <dd>80</dd>
+  <dt>C#</dt>
+  <dd>75</dd>
 </dl>

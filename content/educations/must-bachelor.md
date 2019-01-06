@@ -1,10 +1,11 @@
 ---
-title: "Must Bachelor"
+title: "BACHELOR OF INFORMATION TECHNOLOGY"
 date: 2018-12-24T10:34:23-05:00
-dates: "2000 - 2004"
-degree: "Bachelor"
-gpa: "4.00"
-weight: 0
+dates: "2008 - 2012"
+gpa: "3.82"
+weight: 2
 draft: false
 ---
-Thesis: Nulla, Omnis Vitae Illum Molestiae Rem
+Mongolian University of Science and Technology
+
+Graduated with Honors, President of Student IT Club
