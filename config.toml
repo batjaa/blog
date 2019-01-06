@@ -7,17 +7,12 @@ googleAnalytics = ""
 
 [params]
     author = "Batjaa Batbold"
-    signature = "Batjargal Batbold"
     favicon = "https://secure.gravatar.com/avatar/44f8f75c884a13de29f4a310083cd82e?s=16"
-    githubUsername = "#batjaa"
     email = "batjaa.batbold@gmail.com"
     phone = "+1 804 505 0615"
+    signature = "Batjargal Batbold"
     address = "Palo Alto, California, USA"
     website = "batjaa.com"
-    accent = "red"
-    showBorder = true
-    backgroundColor = "white"
-    font = "Raleway" # should match the name on Google Fonts!
     highlight = true
     highlightStyle = "solarized-dark"
     highlightLanguages = ["go", "haskell", "kotlin", "scala", "swift"]
@@ -35,7 +30,7 @@ staticDir = "static"
     languageName = "English"
     staticDir2 = "static_en"
     title = "Batjaa's corner"
-    weight = 2
+    weight = 1
     [languages.en.params]
         resume = "Batjargal Batbold -- Software Engineer.pdf"
 
@@ -44,7 +39,11 @@ staticDir = "static"
     languageName = "Mongolian"
     staticDir3 = "static_mn"
     title = "Батжаагийн булан"
-    weight = 1
+    weight = 2
+    [languages.mn.params]
+      signature = "Батболдын Батжаргал"
+      resume = "Batjargal Batbold -- Program hangamjiin engineer.pdf"
+
 
 [privacy]
   [privacy.disqus]

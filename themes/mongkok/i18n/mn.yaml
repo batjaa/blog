@@ -1,0 +1,52 @@
+- id: resume
+  translation: "Ажлын намтар"
+- id: resume_experience
+  translation: "Туршлага"
+- id: resume_skills
+  translation: "Мэргэжлийн чадвар"
+- id: resume_education
+  translation: "Боловсрол"
+- id: resume_gpa
+  translation: "Голч"
+- id: resume_honors
+  translation: "Шагнал, урамшуулал"
+- id: portfolio
+  translation: "Хийсэн ажлууд"
+- id: blog
+  translation: "Нийтлэл"
+- id: gallery
+  translation: "Гэрэл сүүдэр"
+- id: contact
+  translation: "Холбоо барих"
+- id: contact_location
+  translation: "Ихэвчлэн энд л байна даа"
+- id: contact_get_in_touch
+  translation: "Холбоосууд"
+- id: contact_drop_note
+  translation: "Зурвас үлдээх"
+- id: contact_form_name
+  translation: "Нэр"
+- id: contact_form_email
+  translation: "И-мейл"
+- id: contact_form_message
+  translation: "Зурвас"
+- id: send
+  translation: "Илгээх"
+- id: contact_get_social
+  translation: "Олон нийтийн сүлжээ"
+- id: download_resume
+  translation: "Ажлын намтар татаж авах"
+- id: menu_welcome
+  translation: "Эхлэл"
+- id: menu_about
+  translation: "Миний тухай"
+- id: menu_resume
+  translation: "Ажлын намтар"
+- id: menu_portfolio
+  translation: "Хийсэн ажлууд"
+- id: menu_blog
+  translation: "Блог"
+- id: menu_gallery
+  translation: "Гэрэл сүүдэр"
+- id: menu_contact
+  translation: "Холбоо барих"

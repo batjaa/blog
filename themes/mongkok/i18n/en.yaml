@@ -1,0 +1,52 @@
+- id: resume
+  translation: "Resume"
+- id: resume_experience
+  translation: "Experience"
+- id: resume_skills
+  translation: "Skills"
+- id: resume_education
+  translation: "Education"
+- id: resume_gpa
+  translation: "GPA"
+- id: resume_honors
+  translation: "Honors and Awards"
+- id: portfolio
+  translation: "Portfolio"
+- id: blog
+  translation: "Blog"
+- id: gallery
+  translation: "Gallery"
+- id: contact
+  translation: "Contact"
+- id: contact_location
+  translation: "Where I am Based"
+- id: contact_get_in_touch
+  translation: "Get in Touch"
+- id: contact_drop_note
+  translation: "Drop Me a Line"
+- id: contact_form_name
+  translation: "Name"
+- id: contact_form_email
+  translation: "Email"
+- id: contact_form_message
+  translation: "Message"
+- id: send
+  translation: "Send"
+- id: contact_get_social
+  translation: "Get Social"
+- id: download_resume
+  translation: "Download Resume"
+- id: menu_welcome
+  translation: "Welcome"
+- id: menu_about
+  translation: "About"
+- id: menu_resume
+  translation: "Resume"
+- id: menu_portfolio
+  translation: "Portfolio"
+- id: menu_blog
+  translation: "Blog"
+- id: menu_gallery
+  translation: "Gallery"
+- id: menu_contact
+  translation: "Contact"
