@@ -47,6 +47,10 @@ lessc themes/mongkok/static/css/index.less themes/mongkok/static/css/index.css
 ```
 
 To have JS files updated make changes and either manually copy the changes to public directory or change some file so hugo updates the whole public directory.
+Or force to serve clean and keep static files in sync.
+```
+hugo serve  --ignoreCache --forceSyncStatic
+```
 
 ## Deployment
 
