@@ -1,18 +1,18 @@
-baseURL = "http://example.com/"
-languageCode = "en-us"
-title = "Minimal"
+languageCode = "en"
+title = "Batjaa's corner"
 theme = "mongkok"
+DefaultContentLanguage = "en"
 disqusShortname = "username" # delete this to disable disqus comments
 googleAnalytics = ""
 
 [params]
     author = "Batjaa Batbold"
     signature = "Batjargal Batbold"
-    description = "Engineer & Travel/Photo/Video/Coffee Enthusiast"
     favicon = "https://secure.gravatar.com/avatar/44f8f75c884a13de29f4a310083cd82e?s=16"
     githubUsername = "#batjaa"
     email = "batjaa.batbold@gmail.com"
     phone = "+1 804 505 0615"
+    address = "Palo Alto, California, USA"
     website = "batjaa.com"
     accent = "red"
     showBorder = true
@@ -27,28 +27,23 @@ googleAnalytics = ""
   portfolio = "portfolios"
   tag = "tags"
 
-[[menu.main]]
-    url = "/"
-    name = "Home"
-    weight = 1
+staticDir = "static"
 
-[[menu.main]]
-    url = "/post/"
-    name = "Posts"
+[languages]
+  [languages.en]
+    baseURL = "https://batjaa.com"
+    languageName = "English"
+    staticDir2 = "static_en"
+    title = "Batjaa's corner"
     weight = 2
+    [languages.en.params]
+        resume = "Batjargal Batbold -- Software Engineer.pdf"
 
-[[menu.main]]
-    url = "/project/"
-    name = "Projects"
-    weight = 3
-
-# Social icons to be shown on the right-hand side of the navigation bar
-# The "name" field should match the name of the icon to be used
-# The list of available icons can be found at http://fontawesome.io/icons/
-
-[[menu.icon]]
-    url = "mailto:batjaa.batbold@gmail.com"
-    name = "envelope-o"
+  [languages.mn]
+    baseURL = "https://batjargal.mn"
+    languageName = "Mongolian"
+    staticDir3 = "static_mn"
+    title = "Батжаагийн булан"
     weight = 1
 
 [privacy]
