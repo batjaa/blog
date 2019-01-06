@@ -43,7 +43,7 @@ To have css compiled install less and compile the .less script
 ```
 npm install -g less
 
-lessc themes/mongkok/static/css/index.less themes/mongkok/static/css/index.css
+lessc themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css
 ```
 
 To have JS files updated make changes and either manually copy the changes to public directory or change some file so hugo updates the whole public directory.
