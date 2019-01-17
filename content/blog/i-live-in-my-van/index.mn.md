@@ -2,8 +2,8 @@
 title: "Би машиндаа амьдардаг"
 date: 2018-12-27T10:03:34-05:00
 draft: false
-categories: ["featured", lifestyle"]
-image: "batmobile.jpg"
+categories: ["featured", "lifestyle"]
+image: "workinginbatmobile.jpg"
 ---
 
 Машиндаа амьдарч эхэлснээс хойш жил өнгөрч ээ.

@@ -2,7 +2,7 @@
 title: "I live in my van"
 date: 2018-12-27T10:03:34-05:00
 draft: false
-categories: ["featured", lifestyle"]
+categories: ["featured", "lifestyle"]
 image: "batmobile.jpg"
 ---
 
@@ -16,7 +16,7 @@ These kind of shift in social life and my interest in new things has lead me to 
 
 When I tell people about my life style the usually ask these question:
 
-- Where do you take a shower? This is the first question most of the people ask. Which made me think that being clean has the highest priority in life. Taking a shower is pretty easy. Since I workout at a local gym I usually take a shower every morning there.
+- *Where do you take a shower?* This is the first question most of the people ask. Which made me think that being clean has the highest priority in life. Taking a shower is pretty easy. Since I workout at a local gym I usually take a shower every morning there.
 Where do you go to the restroom? Honestly, most of the time at work. Or depending on where I had spent the night I would go to the closest restroom in the mornings. I’ve a pee bottle JUST IN CASE. I used to use at the beginning but not that much lately. Probably my body is accustomed now. Being on a schedule makes things easier. Never had an emergency yet.
 - What about meal? Though I’ve a travel pot and a gas grill, I almost stopped cooking. Maybe I would cook a soup once in a while. I usually have my breakfast at my office since we have a small kitchen. Lunch, always a decent meal, usually from a local place. Sometimes I would have the rest for dinner. I don’t eat much after 6PM, maybe some snacks.
 - How comfortable is it? Do you get tired? Maybe I’m over stating but I get a better sleep than I used to get when I lived in an apartment and even now, it’s often the case when sometimes I crash at friends places. I had only few nights were it was warm and not so much comfortable to sleep. But hey, I live in the Bay Area where most of the apartments don’t even have an AC so can’t complain much about that.
