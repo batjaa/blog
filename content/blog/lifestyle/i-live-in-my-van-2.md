@@ -1,5 +1,5 @@
 ---
-title: "I Live in My Van"
+title: "I Live in My Van 2"
 date: 2018-04-04T19:29:17-07:00
 draft: false
 categories: ["featured", "lifestyle"]

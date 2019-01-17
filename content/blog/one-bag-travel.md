@@ -1,5 +1,5 @@
 ---
-title: "One Bag Travel"
+title: "One Bag Travel 2"
 date: 2018-12-27T10:02:56-05:00
 draft: false
 tags: [""]
