@@ -50,3 +50,5 @@
   translation: "Гэрэл сүүдэр"
 - id: menu_contact
   translation: "Холбоо барих"
+- id: blog_view
+  translation: "Унших"

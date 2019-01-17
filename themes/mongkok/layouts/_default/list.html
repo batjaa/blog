@@ -16,16 +16,16 @@ If you want to use relative paths, please use:
   <ul class="ajax-portfolio-item-list">
     {{ range .Data.Pages }}
         <li>
-        <a data-href="{{ .Permalink }}">
+        <a data-href="{{ .RelPermalink }}">
           {{ if .Params.image }}
-            <img data-src="{{ .Permalink }}/{{ .Params.image }}" alt="..." >
+            <img src="{{ .RelPermalink }}/{{ .Params.image }}" alt="..." >
           {{ else }}
             <img src="images/placeholder/540x360.gif" alt="...">
           {{ end }}
           <div class="caption vertically-centered-container">
             <div class="vertically-centered">
               <h3>{{ .Title }}</h3>
-              <div class="view-btn">View</div>
+              <div class="view-btn">{{ i18n "blog_view" }}</div>
             </div>
           </div>
         </a>

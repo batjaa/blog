@@ -68,7 +68,7 @@
           
           {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
               {{ with $.Site.GetPage (printf "/categories/%s" $name) }}
-                <li><a href="#" data-src="{{ .Permalink }}" data-cat="{{ $name }}-blogs">{{ $name }}</a></li>
+                <li><a href="#" data-src="{{ .RelPermalink }}" data-cat="{{ $name }}-blogs">{{ $name }}</a></li>
               {{ end }}
           {{ end }}
         </ul>
@@ -137,7 +137,7 @@
                     <div class="row">
                       <div class="col-sm-8"><p class="title-style">{{.Title}} {{.Params.position}}</p></div>
                       <div class="col-sm-4"><p class="tag sm-text-center">{{.Params.dates}}</p></div>
-                      <div class="col-sm-12"><p>{{.Content}}</p></div>
+                      <div class="col-sm-12 experiences-content"><p>{{.Content}}</p></div>
                     </div>
                   </li>
                 {{ end }}

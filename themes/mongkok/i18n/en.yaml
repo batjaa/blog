@@ -50,3 +50,5 @@
   translation: "Gallery"
 - id: menu_contact
   translation: "Contact"
+- id: blog_view
+  translation: "View"

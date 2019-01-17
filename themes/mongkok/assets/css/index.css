@@ -1,3 +1,9 @@
+.section-container-wrapper .section-container section ul.item-list li .experiences-content ul {
+  padding-left: 15px;
+}
+.section-container-wrapper .section-container section ul.item-list li .experiences-content ul li {
+  margin: 0 0 10px;
+}
 .container {
   padding-left: 30px;
   padding-right: 30px;
