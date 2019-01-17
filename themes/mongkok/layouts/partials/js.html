@@ -10,7 +10,7 @@
 {{ end }}
 
 {{ $post := resources.Get "js/post.js" | resources.ExecuteAsTemplate "js/post.js" . }}
-<script src="{{ $post.Permalink }}"></script>
+<script src="{{ $post.RelPermalink }}"></script>
 
 {{ $config := resources.Get "js/config.js" | resources.ExecuteAsTemplate "js/config.js" . }}
-<script data-main="{{ $config.Permalink }}" src="js/require.js"></script>
+<script data-main="{{ $config.RelPermalink }}" src="/js/require.js"></script>

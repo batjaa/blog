@@ -5,9 +5,9 @@
 <link href='https://fonts.googleapis.com/css?family=Satisfy:400' rel='stylesheet' type='text/css'>
 
 {{ $style := resources.Get "css/colorbox.css" | resources.Minify | resources.Fingerprint }}
-<link rel="stylesheet" href="{{ $style.Permalink }}">
+<link rel="stylesheet" href="{{ $style.RelPermalink }}">
 {{ $style := resources.Get "css/index.css" | resources.Minify | resources.Fingerprint }}
-<link rel="stylesheet" href="{{ $style.Permalink }}">
+<link rel="stylesheet" href="{{ $style.RelPermalink }}">
 
 <!-- highlight.js -->
 {{ if .Site.Params.highlight | default false }}

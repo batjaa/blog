@@ -34,4 +34,4 @@ require.config({
     waitSeconds: 120
 });
 
-requirejs(['js/index.js']);
+requirejs(['/js/index.js']);
