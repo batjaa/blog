@@ -17,7 +17,11 @@ If you want to use relative paths, please use:
     {{ range .Data.Pages }}
         <li>
         <a data-href="{{ .Permalink }}">
-          <img src="images/placeholder/540x360.gif" alt="...">
+          {{ if .Params.image }}
+            <img data-src="{{ .Permalink }}/{{ .Params.image }}" alt="..." >
+          {{ else }}
+            <img src="images/placeholder/540x360.gif" alt="...">
+          {{ end }}
           <div class="caption vertically-centered-container">
             <div class="vertically-centered">
               <h3>{{ .Title }}</h3>
