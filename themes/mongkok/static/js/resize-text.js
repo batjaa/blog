@@ -52,7 +52,7 @@ ResizeText.prototype.resize = function () {
 		currLetterSpacing = parseInt(this.$elem.css('letter-spacing'), 10),
 		newSize = Math.round(currSize * parentWidth / this.$elem.width()),
 		newLetterSpacing = currLetterSpacing * parentWidth / this.$elem.width(),
-		newHeight = Math.round(newSize * 0.85);
+		newHeight = Math.round(newSize * 0.90);
 
 	this.$elem.css({
 		'font-size': newSize + 'px',
