@@ -26,7 +26,6 @@ staticDir = "static"
 
 [languages]
   [languages.en]
-    baseURL = "https://batjaa.com"
     languageName = "English"
     staticDir2 = "static_en"
     title = "Batjaa's corner"
@@ -35,7 +34,6 @@ staticDir = "static"
         resume = "Batjargal Batbold -- Software Engineer.pdf"
 
   [languages.mn]
-    baseURL = "https://batjargal.mn"
     languageName = "Mongolian"
     staticDir3 = "static_mn"
     title = "Батжаагийн булан"
@@ -43,7 +41,6 @@ staticDir = "static"
     [languages.mn.params]
       signature = "Батболдын Батжаргал"
       resume = "Batjargal Batbold -- Program hangamjiin engineer.pdf"
-
 
 [privacy]
   [privacy.disqus]
