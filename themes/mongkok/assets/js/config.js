@@ -28,7 +28,7 @@ require.config({
         'colorbox': ['jquery'],
 		'css-book': ['jquery', 'hammer'],
 		'ticker': ['jquery'],
-        'google-maps': ['jquery', 'async!https://maps.googleapis.com/maps/api/js?key={{ .Site.Params.googleMapsApi }}&callback=initMap'],
+        'google-maps': ['jquery', 'async!https://maps.googleapis.com/maps/api/js?key={{ getenv "GOOGLE_MAPS_API_TOKEN" }}&callback=initMap'],
 		'contact': ['jquery']
 	},
     waitSeconds: 120
