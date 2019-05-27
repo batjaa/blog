@@ -41,7 +41,10 @@ staticDir = "static"
     title = "Батжаагийн булан"
     weight = 2
     [languages.mn.params]
-      signature = "Батболдын Батжаргал"
+      author = "Батболдын Батжаргал"
+      phone = "+976 88061510"
+      signature = "Б.Батжаргал"
+      website = "batjargal.mn"
       resume = "Batjargal Batbold -- Program hangamjiin engineer.pdf"
 
 [privacy]
