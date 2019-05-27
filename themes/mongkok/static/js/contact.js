@@ -12,10 +12,12 @@ jQuery(document).ready(function(){
 
 	  var $form = $(this);
 		$.post(action, $form.serialize())
-			.then(function (data) {
+			.then(function (data, status) {
+				if (status === 'success') {
+					$('#contact-form').slideUp('fast');
+				}
 				$('#message').html(data);
 				$('#contact-form-submit-btn').html(originalSubmitBtnHtml).removeAttr('disabled');
-				// if(data.match('Thank you') !== null) $('#contact-form').slideUp('fast');
 			});
 
 		return false;
