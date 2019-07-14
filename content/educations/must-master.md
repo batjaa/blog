@@ -7,5 +7,4 @@ weight: 1
 draft: false
 ---
 Mongolian University of Science and Technology
-
 Thesis: Grid Computing Infrastructure Cost
