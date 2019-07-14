@@ -10,7 +10,8 @@ require.config({
 		'colorbox': 'jquery.colorbox-min',
 		'get-scrollbar-width': 'jquery.getscrollbarwidth',
 		'modernizr': 'modernizr.custom.min',
-		'hammer': 'hammer.min'
+		'hammer': 'hammer.min',
+		'masonry': 'masonry.min',
 	},
 	shim: {
 		'bootstrap': ['jquery'],
@@ -29,7 +30,8 @@ require.config({
 		'css-book': ['jquery', 'hammer'],
 		'ticker': ['jquery'],
         'google-maps': ['jquery', 'async!https://maps.googleapis.com/maps/api/js?key={{ getenv "GOOGLE_MAPS_API_TOKEN" }}&callback=initMap'],
-		'contact': ['jquery']
+		'contact': ['jquery'],
+		'masonry': ['jquery'],
 	},
     waitSeconds: 120
 });

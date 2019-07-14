@@ -1,4 +1,21 @@
-define(['jquery', 'hammer', 'bootstrap', 'setup', 'resize-text', 'bar-chart', 'donut-chart', 'progress-chart', 'jquery-color', 'portfolio', 'ticker', 'google-maps', 'contact', 'css-book', 'colorbox'], function($, Hammer) {
+define([
+	'jquery',
+	'hammer',
+	'masonry',
+	'bootstrap',
+	'setup',
+	'resize-text',
+	'bar-chart',
+	'donut-chart',
+	'progress-chart',
+	'jquery-color',
+	'portfolio',
+	'ticker',
+	'google-maps',
+	'contact',
+	'css-book',
+	'colorbox'
+], function($, Hammer, Masonry) {
 	$(function() {
 		window.Hammer = Hammer;
 
@@ -144,6 +161,9 @@ define(['jquery', 'hammer', 'bootstrap', 'setup', 'resize-text', 'bar-chart', 'd
 			}, 100);
 		}, 200);
 
+		const elem = document.querySelector('.gallery');
+		const msnry = new Masonry(elem, {});
+		
 		window.postLoad();
 	});
 });

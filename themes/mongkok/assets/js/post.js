@@ -22,5 +22,4 @@ window.postLoad = function() {
       mapCanvas.googleMaps(googleMapsSettings);
     }  
   {{ end }}
-
 };
