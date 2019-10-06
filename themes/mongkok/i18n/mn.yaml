@@ -19,7 +19,7 @@
 - id: contact
   translation: "Холбоо барих"
 - id: contact_location
-  translation: "Ихэвчлэн энд л байна даа"
+  translation: "Яг одоо энд л явна даа"
 - id: contact_get_in_touch
   translation: "Холбоосууд"
 - id: contact_drop_note

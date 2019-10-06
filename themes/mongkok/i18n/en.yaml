@@ -19,7 +19,7 @@
 - id: contact
   translation: "Contact"
 - id: contact_location
-  translation: "Where I am Based"
+  translation: "Where I am At"
 - id: contact_get_in_touch
   translation: "Get in Touch"
 - id: contact_drop_note
