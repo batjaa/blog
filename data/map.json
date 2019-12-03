@@ -60,9 +60,7 @@
       "name": "Ulaanbaatar",
       "lat": 47.886398,
       "lng": 106.905746
-    }
-  ],
-  "planned": [
+    },
     {
       "name": "Athens",
       "lat": 37.98381,
@@ -77,7 +75,9 @@
       "name": "Munich",
       "lat": 48.135124,
       "lng": 11.581981
-    },
+    }
+  ],
+  "planned": [
     {
       "name": "San Francisco",
       "lat": 37.774929,
