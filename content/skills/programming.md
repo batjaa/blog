@@ -5,16 +5,14 @@ draft: false
 weight: 1
 ---
 
-<p>I am familiar with <strong>JavaScript</strong>, <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>PHP</strong>, <strong>Java</strong> and <strong>C#</strong>.</p>
+<p>I am familiar with <strong>Go</strong>, <strong>JS/TS</strong>, <strong>HTML/CSS</strong>, <strong>PHP</strong>, <strong>Java</strong> and <strong>C#</strong>.</p>
 <dl id="codingSkills" class="chart bar-chart" style="display: none;">
-  <dt>JavaScript</dt>
+  <dt>Go</dt>
   <dd>95</dd>
-  <dt>HTML5</dt>
-  <dd>90</dd>
-  <dt>CSS3</dt>
-  <dd>90</dd>
+  <dt>JS/TS</dt>
+  <dd>95</dd>
   <dt>PHP</dt>
-  <dd>80</dd>
+  <dd>90</dd>
   <dt>Java</dt>
   <dd>80</dd>
   <dt>C#</dt>

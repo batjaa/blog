@@ -132,7 +132,7 @@
             <div class="col-md-7">
               <h3 class="h3-style">{{ i18n "resume_experience" }}</h3>
               <ul class="item-list">
-                {{ range where .Pages "Section" "experiences" }}
+                {{ range (where .Site.RegularPages "Section" "experiences").ByWeight }}
                   <li>
                     <div class="row">
                       <div class="col-sm-8"><p class="title-style">{{.Title}} {{.Params.position}}</p></div>
@@ -146,7 +146,7 @@
             <div class="col-md-4 col-md-offset-1">
               <h3 class="h3-style">{{ i18n "resume_education" }}</h3>
               <ul class="item-list">
-                {{ range where .Pages "Section" "educations" }}
+                {{ range (where .Site.RegularPages "Section" "educations").ByWeight }}
                   <li>
                     <div class="row">
                       <div class="col-sm-12">
@@ -162,7 +162,7 @@
               </ul>
               <h3 class="h3-style">{{ i18n "resume_skills" }}</h3>
               <ul class="item-list">
-                {{ range where .Pages "Section" "skills" }}
+                {{ range (where .Site.RegularPages "Section" "skills").ByWeight }}
                   <li>
                     {{ .Content }}
                   </li>
@@ -170,7 +170,7 @@
               </ul>
               <h3 class="h3-style">{{ i18n "resume_honors" }}</h3>
               <ul class="item-list list-half-margin-bottom">
-                {{ range where .Pages "Section" "honors" }}
+                {{ range (where .Site.RegularPages "Section" "honors").ByWeight }}
                   <li>
                     <p>
                       <span class="title-style">{{ .Title }}</span>

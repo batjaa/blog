@@ -2,7 +2,7 @@
 title: "MASTER OF INFORMATION TECHNOLOGY"
 date: 2018-12-24T10:34:23-05:00
 dates: "2012 - 2013"
-gpa: "3.80"
+gpa: "3.50"
 weight: 1
 draft: false
 ---

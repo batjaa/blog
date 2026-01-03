@@ -32,7 +32,7 @@ staticDir = "static"
     title = "Batjaa's corner"
     weight = 1
     [languages.en.params]
-        resume = "Batjargal Batbold -- Software Engineer.pdf"
+        resume = "Batjargal Batbold -- Senior Software Engineer.pdf"
 
   [languages.mn]
     baseURL = "https://batjargal.mn"

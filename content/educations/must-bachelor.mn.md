@@ -3,7 +3,7 @@ title: "Must Bachelor"
 date: 2018-12-24T10:34:23-05:00
 dates: "2008 - 2012"
 degree: "Bachelor"
-gpa: "3.82"
+gpa: "3.84"
 weight: 0
 draft: false
 ---
