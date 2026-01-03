@@ -1,0 +1,21 @@
+{
+  "name": "batjaa-blog",
+  "version": "1.0.0",
+  "description": "Personal blog and portfolio site built with Hugo",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "css:build": "lessc --math=always themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css",
+    "css:watch": "lessc --math=always themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css --watch",
+    "dev": "npm run css:build && hugo serve --ignoreCache --forceSyncStatic",
+    "build": "npm run css:build && hugo --minify",
+    "clean": "rm -rf public"
+  },
+  "devDependencies": {
+    "less": "^4.2.0"
+  },
+  "author": "Batjargal Batbold",
+  "license": "MIT"
+}

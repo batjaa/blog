@@ -1438,14 +1438,12 @@ nav ul.menu.nav li i.fa {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 .section-container-wrapper .section-container section#gallery ul.gallery li {
-  width: 50%;
-  padding: 10px;
-  float: left;
-}
-.section-container-wrapper .section-container section#gallery ul.gallery li:nth-child(2n+1) {
-  clear: left;
+  padding: 0;
 }
 .section-container-wrapper .section-container section#gallery ul.gallery li a.lightbox {
   display: block;
@@ -1644,14 +1642,8 @@ nav ul.menu.nav li i.fa {
     left: auto;
     right: 5%;
   }
-  .section-container-wrapper .section-container section#gallery ul.gallery li {
-    width: 33%;
-  }
-  .section-container-wrapper .section-container section#gallery ul.gallery li:nth-child(2n+1) {
-    clear: none;
-  }
-  .section-container-wrapper .section-container section#gallery ul.gallery li:nth-child(3n+1) {
-    clear: left;
+  .section-container-wrapper .section-container section#gallery ul.gallery {
+    grid-template-columns: repeat(3, 1fr);
   }
   .sm-text-center {
     text-align: center;
@@ -1690,14 +1682,8 @@ nav ul.menu.nav li i.fa {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffa971ae, endColorstr=#00a971ae, GradientType=1);
     /* IE6-9 */
   }
-  .section-container-wrapper .section-container section#gallery ul.gallery li {
-    width: 25%;
-  }
-  .section-container-wrapper .section-container section#gallery ul.gallery li:nth-child(3n+1) {
-    clear: none;
-  }
-  .section-container-wrapper .section-container section#gallery ul.gallery li:nth-child(4n + 1) {
-    clear: left;
+  .section-container-wrapper .section-container section#gallery ul.gallery {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 /* Medium devices (desktops, 992px and up) */

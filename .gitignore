@@ -4,3 +4,7 @@
 
 *.sublime-*
 *.code-*
+
+.env
+public/
+node_modules/

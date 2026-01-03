@@ -18,7 +18,8 @@
 		saturation: -80,
 		lightness: -10,
 		invertLightness: false,
-		infoWindowContentString: '<h4>Info Window</h4>' + '<p>You can add content here</p>'
+		infoWindowContentString: '<h4>Info Window</h4>' + '<p>You can add content here</p>',
+		mapId: 'DEMO_MAP_ID' // For production, create a Map ID in Google Cloud Console
 	};
 
 	function GoogleMaps( element, options ) {
@@ -47,23 +48,34 @@
 				center: latlong,
 				disableDefaultUI: this.options.disableDefaultUI,
 				scrollwheel: this.options.scrollwheel,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				mapId: this.options.mapId
 			};
-			
+
 		var map = new google.maps.Map(this.elem, mapOptions);
 		map.setOptions({styles: mapStyles});
 
-		var marker = new google.maps.Marker({
-			position: latlong,
-			map: map,
-		});
+		// Use AdvancedMarkerElement if available, fallback to Marker for compatibility
+		var marker;
+		if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
+			marker = new google.maps.marker.AdvancedMarkerElement({
+				position: latlong,
+				map: map,
+			});
+		} else {
+			// Fallback to deprecated Marker for older API versions
+			marker = new google.maps.Marker({
+				position: latlong,
+				map: map,
+			});
+		}
 
 		var infoWindow = new google.maps.InfoWindow({
 			content: this.options.infoWindowContentString
 		});
 
-		google.maps.event.addListener(marker, 'click', function() {
-			infoWindow.open(map,marker);
+		marker.addListener('click', function() {
+			infoWindow.open(map, marker);
 		});
 	};
 

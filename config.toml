@@ -47,6 +47,15 @@ staticDir = "static"
       website = "batjargal.mn"
       resume = "Batjargal Batbold -- Program hangamjiin engineer.pdf"
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^INSTAGRAM_TOKEN$', '^GOOGLE_MAPS_API_TOKEN$']
+
 [privacy]
   [privacy.disqus]
     disable = false

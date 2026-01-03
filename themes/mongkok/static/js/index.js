@@ -1,7 +1,6 @@
 define([
 	'jquery',
 	'hammer',
-	'masonry',
 	'bootstrap',
 	'setup',
 	'resize-text',
@@ -15,7 +14,7 @@ define([
 	'contact',
 	'css-book',
 	'colorbox'
-], function($, Hammer, Masonry) {
+], function($, Hammer) {
 	$(function() {
 		window.Hammer = Hammer;
 
@@ -135,35 +134,46 @@ define([
 		$('a.lightbox-webpage').colorbox(lightboxWebpageSettings);
 
 		window.textResized = 0;
+
+		// Function to remove preloader
+		var removePreloader = function() {
+			$('.preloader').animate({
+				opacity: 0},
+				400, function() {
+					$(this).hide();
+				});
+		};
+
 		// Resize text
 		setTimeout(function(){
-			$('.span-text').resizeText();
+			var spanTextLength = $('.span-text').length;
 
-			var spanTextLength = $('.span-text').length,
-				checkResized;
+			if (spanTextLength > 0) {
+				$('.span-text').resizeText();
 
-			checkResized = setInterval(function () {
-				if (window.textResized == spanTextLength){
-					clearInterval(checkResized);
+				var checkResized,
+					attempts = 0,
+					maxAttempts = 50; // 5 seconds maximum wait
+
+				checkResized = setInterval(function () {
+					attempts++;
+					if (window.textResized == spanTextLength || attempts >= maxAttempts){
+						clearInterval(checkResized);
+						if ($('.ticker').length > 0) {
+							$('.ticker').ticker();
+						}
+						setTimeout(removePreloader, 400);
+					}
+				}, 100);
+			} else {
+				// No span-text elements, remove preloader immediately
+				if ($('.ticker').length > 0) {
 					$('.ticker').ticker();
-
-					setTimeout(function () {
-						// Preloader
-						$(document).ready(function () {
-							$('.preloader').animate({
-								opacity: 0},
-								400, function() {
-									$(this).hide();
-								});
-						});
-					}, 400);
 				}
-			}, 100);
+				setTimeout(removePreloader, 400);
+			}
 		}, 200);
 
-		const elem = document.querySelector('.gallery');
-		const msnry = new Masonry(elem, {});
-		
 		window.postLoad();
 	});
 });

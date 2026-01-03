@@ -11,22 +11,22 @@
         <link rel="icon" href="{{ .Site.Params.favicon | absURL }}">
         {{ end }}
 
-        {{ partial "css" . }} {{ .Hugo.Generator }}
+        {{ partial "css" . }} {{ hugo.Generator }}
 
-        {{ if .RSSLink }}
-        <link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
-        <link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
+        {{ with .OutputFormats.Get "rss" }}
+        <link href="{{ .Permalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" />
+        <link href="{{ .Permalink }}" rel="feed" type="application/rss+xml" title="{{ $.Site.Title }}" />
         {{ end }}
 
-        {{ if .Site.GoogleAnalytics }}
+        {{ if .Site.Config.Services.GoogleAnalytics.ID }}
         <!-- Global Site Tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.GoogleAnalytics }}"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Config.Services.GoogleAnalytics.ID }}"></script>
         <script>
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments)};
           gtag('js', new Date());
 
-          gtag('config', '{{ .Site.GoogleAnalytics }}');
+          gtag('config', '{{ .Site.Config.Services.GoogleAnalytics.ID }}');
         </script>
         {{ end }}
     </head>

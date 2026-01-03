@@ -4,25 +4,26 @@ This is where my personal blog and portfolio lives.
 
 ## Getting Started
 
-The blog is powered by hugo. Enjoy!
+The blog is powered by [Hugo](https://gohugo.io/). Enjoy!
 
 ### Prerequisites
 
 What things you need to install the software and how to install them
 
-```
+```bash
 brew install hugo
-
-
 ```
+
+Node.js LTS (v20+) is also required for CSS compilation.
 
 ### Installing
 
-Clone the repo and run the local hubo server.
+Clone the repo and install dependencies:
 
-```
+```bash
 git clone git@github.com:batjaa/blog.git
-hugo server
+cd blog
+npm install
 ```
 
 ### And coding style tests
@@ -35,25 +36,60 @@ Give an example
 
 ## Development
 
-Currently there're not tooling for frontend development.
+### Running the development server
 
+To compile CSS and start the Hugo development server:
 
-To have css compiled install less and compile the .less script
-
-```
-npm install -g less
-
-lessc themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css
+```bash
+npm run dev
 ```
 
-To have JS files updated make changes and either manually copy the changes to public directory or change some file so hugo updates the whole public directory.
-Or force to serve clean and keep static files in sync.
+This will:
+1. Compile the Less files to CSS
+2. Start Hugo server with cache clearing and static file syncing
+3. Watch for changes (Hugo hot-reload)
+
+### CSS Development
+
+To compile CSS separately:
+
+```bash
+npm run css:build
 ```
-hugo serve  --ignoreCache --forceSyncStatic
+
+To watch for CSS changes during development:
+
+```bash
+npm run css:watch
 ```
+
+### Building for production
+
+To compile CSS and build the site for production:
+
+```bash
+npm run build
+```
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory (use `.env.example` as a template):
+
+```bash
+cp .env.example .env
+```
+
+Configure the following optional features:
+
+- **INSTAGRAM_TOKEN**: For displaying Instagram feed
+- **GOOGLE_MAPS_API_TOKEN**: For displaying Google Maps
+  - Get your API key from [Google Cloud Console](https://console.cloud.google.com/google/maps-apis)
+  - For production use, create a Map ID in Google Cloud Console and update the `mapId` in `themes/mongkok/assets/js/post.js`
 
 ## Deployment
 
-```
+```bash
 ./deploy.sh [commit message]
 ```

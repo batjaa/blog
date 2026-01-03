@@ -1,4 +1,5 @@
 require.config({
+	baseUrl: '/js',
 	paths: {
 		'jquery': "jquery-1.10.2.min",
 		'bootstrap': "bootstrap.min",
@@ -11,7 +12,6 @@ require.config({
 		'get-scrollbar-width': 'jquery.getscrollbarwidth',
 		'modernizr': 'modernizr.custom.min',
 		'hammer': 'hammer.min',
-		'masonry': 'masonry.min',
 	},
 	shim: {
 		'bootstrap': ['jquery'],
@@ -29,11 +29,10 @@ require.config({
         'colorbox': ['jquery'],
 		'css-book': ['jquery', 'hammer'],
 		'ticker': ['jquery'],
-        'google-maps': ['jquery', 'async!https://maps.googleapis.com/maps/api/js?key={{ getenv "GOOGLE_MAPS_API_TOKEN" }}&callback=initMap'],
+        'google-maps': ['jquery', 'async!https://maps.googleapis.com/maps/api/js?key={{ getenv "GOOGLE_MAPS_API_TOKEN" }}&loading=async&callback=initMap'],
 		'contact': ['jquery'],
-		'masonry': ['jquery'],
 	},
     waitSeconds: 120
 });
 
-requirejs(['/js/index.js']);
+requirejs(['index']);
