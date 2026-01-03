@@ -1683,7 +1683,7 @@ nav ul.menu.nav li i.fa {
     /* IE6-9 */
   }
   .section-container-wrapper .section-container section#gallery ul.gallery {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 /* Medium devices (desktops, 992px and up) */

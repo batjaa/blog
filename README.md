@@ -83,7 +83,9 @@ cp .env.example .env
 
 Configure the following optional features:
 
-- **INSTAGRAM_TOKEN**: For displaying Instagram feed
+- **Instagram Feed**: Now uses manually curated posts (no API token needed)
+  - To update the displayed posts, edit `themes/mongkok/layouts/partials/instagramfeed.html`
+  - Simply update the post IDs in the `$posts` array
 - **GOOGLE_MAPS_API_TOKEN**: For displaying Google Maps
   - Get your API key from [Google Cloud Console](https://console.cloud.google.com/google/maps-apis)
   - For production use, create a Map ID in Google Cloud Console and update the `mapId` in `themes/mongkok/assets/js/post.js`
