@@ -1,12 +1,16 @@
 {{ $id := getenv "INSTAGRAM_TOKEN" }}
 {{ if $id }}
   {{ $urlPre := "https://api.instagram.com/v1/users/self/media/recent?access_token=" }}
-  {{ $inst := getJSON $urlPre $id }}
-  {{ with $inst }}
-    {{ range first 25 .data }}
-      <li>
-        <a href="{{ .images.standard_resolution.url }}" class="lightbox lightbox-image" title="{{ .caption.text }}"><img src="{{ .images.low_resolution.url }}"></a>
-      </li>
+  {{ $url := printf "%s%s" $urlPre $id }}
+  {{ $resource := resources.GetRemote $url }}
+  {{ if $resource }}
+    {{ $inst := $resource | transform.Unmarshal }}
+    {{ with $inst }}
+      {{ range first 25 .data }}
+        <li>
+          <a href="{{ .images.standard_resolution.url }}" class="lightbox lightbox-image" title="{{ .caption.text }}"><img src="{{ .images.low_resolution.url }}"></a>
+        </li>
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}
