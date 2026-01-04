@@ -1,6 +1,6 @@
 ---
 title: "Quartzy Inc"
-dates: "June 2015 - June 2020"
+dates: "Jun 2015 - Jun 2020"
 position: "Software Engineer"
 weight: 2
 draft: false

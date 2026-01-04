@@ -2,7 +2,7 @@
 title: "Fieldbook, Inc"
 dates: "01/2015 - 06/2015"
 position: "Бүтээгдэхүүний инженер"
-weight: 2
+weight: 20
 draft: false
 ---
 - Бүтээгдэхүүн шинэчлэх, нэмэлт боломжуулыг хөгжүүлэх

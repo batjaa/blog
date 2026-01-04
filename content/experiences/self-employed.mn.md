@@ -1,7 +1,7 @@
 ---
 title: "Self-Employed"
 date: 2018-04-04T19:29:17-07:00
-weight: 7
+weight: 40
 draft: false
 ---
 
