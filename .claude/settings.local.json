@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(hugo serve:*)",
+      "Bash(hugo version:*)",
+      "Bash(brew info:*)",
+      "Bash(curl:*)",
+      "Bash(node --version:*)",
+      "Bash(npm install)",
+      "Bash(npm run css:build:*)",
+      "Bash(hugo --quiet:*)",
+      "Bash(npm run build:*)",
+      "Bash(ln:*)",
+      "Bash(npm run dev:*)",
+      "Bash(hugo:*)",
+      "Bash(npm run newsletter:new:*)",
+      "Bash(npm run newsletter:build:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
