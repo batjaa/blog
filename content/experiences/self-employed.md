@@ -5,6 +5,7 @@ weight: 7
 draft: false
 ---
 
+- Built [ariguna.com](https://ariguna.com/) 0 to 1. A salon management system with booking and POS capabilities.
 - Designed, developed, and deployed a nationwide Railway Monitoring system using C#, providing efficient solution to share workspace between server-client and data manipulation for better storage.
 - Designed and developed a Loan management system using C# which supports multiple companies loans and different asset types.
 - Designed and developed a stock trading platform in C# while handling full stock portfolio management and numerous calculations of stock market indicators. It uses Java web crawler for tracking stock price.

@@ -1,6 +1,6 @@
 ---
 title: "Amazon.com Services LLC"
-dates: "Jun 2020 - Jul 2022"
+dates: "06/2020 - 07/2022"
 position: "Ахлах програм хангамжийн инженер"
 weight: 9
 draft: false
