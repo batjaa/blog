@@ -1,12 +1,16 @@
 name: Newsletter
 
 on:
+  # Auto-build when newsletter content changes
+  push:
+    branches: [master, main]
+    paths:
+      - 'newsletter/issues/**'
+      - 'newsletter/templates/**'
+
+  # Manual trigger for sending
   workflow_dispatch:
     inputs:
-      issue:
-        description: 'Newsletter issue (e.g., 2026-01). Leave empty for latest.'
-        required: false
-        type: string
       action:
         description: 'Action to perform'
         required: true
@@ -18,8 +22,75 @@ on:
         default: 'build-only'
 
 jobs:
-  newsletter:
+  build:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: newsletter/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd newsletter && npm ci
+
+      - name: Build newsletter
+        run: npm run newsletter:build
+        env:
+          OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git add content/newsletter/
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit generated HTML
+        if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: rebuild newsletter HTML [skip ci]"
+          git push
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-html
+          path: |
+            newsletter/dist/*.html
+            content/newsletter/*.html
+
+      - name: Summary
+        run: |
+          echo "## Newsletter Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "**Trigger:** Push to ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Trigger:** Manual (${{ github.event.inputs.action }})" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Built Issues" >> $GITHUB_STEP_SUMMARY
+          ls -1 newsletter/dist/*.html | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY
+
+  send:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'build-only'
 
     steps:
       - name: Checkout
@@ -39,37 +110,24 @@ jobs:
 
       - name: Build newsletter
         run: npm run newsletter:build
-        env:
-          OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: newsletter-html
-          path: |
-            newsletter/dist/*.html
-            content/newsletter/*.html
 
       - name: Send test email
-        if: ${{ github.event.inputs.action == 'send-test' }}
+        if: github.event.inputs.action == 'send-test'
         run: npm run newsletter:send:test
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           TEST_EMAIL_ADDRESS: ${{ secrets.TEST_EMAIL_ADDRESS }}
 
       - name: Send to all subscribers
-        if: ${{ github.event.inputs.action == 'send-broadcast' }}
+        if: github.event.inputs.action == 'send-broadcast'
         run: npm run newsletter:send:broadcast
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           NEWSLETTER_SUBSCRIBERS: ${{ secrets.NEWSLETTER_SUBSCRIBERS }}
           NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
 
-      - name: Summary
+      - name: Send Summary
         run: |
-          echo "## Newsletter Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "## Email Sent" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Action:** ${{ github.event.inputs.action }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Built Issues" >> $GITHUB_STEP_SUMMARY
-          ls -1 newsletter/dist/*.html | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY
