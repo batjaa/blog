@@ -201,20 +201,68 @@ NEWSLETTER_FROM_EMAIL=newsletter@batjaa.com
 
 ### GitHub Actions
 
-The newsletter can be sent via GitHub Actions. Go to **Actions** → **Newsletter** → **Run workflow**.
+The newsletter workflow (`.github/workflows/newsletter.yml`) handles both automatic builds and manual email sending.
 
-**Options:**
-- `build-only` - Just build the newsletter HTML
-- `send-test` - Build and send test email
-- `send-broadcast` - Build and send to all subscribers
+#### Automatic Builds (on push)
 
-**Required Secrets:**
+When you push changes to `newsletter/issues/**` or `newsletter/templates/**` on the `master` or `main` branch:
+
+1. **Build** - Renders markdown issues into HTML
+2. **Auto-commit** - Commits generated HTML to `content/newsletter/` (with `[skip ci]` to prevent loops)
+3. **Trigger Netlify** - Fires the Netlify build hook to deploy the updated site
+
+This means you can edit newsletter content, push to GitHub, and the web archive updates automatically.
+
+#### Manual Triggers
+
+Go to **Actions** → **Newsletter** → **Run workflow** to manually trigger:
+
+| Action | Description |
+|--------|-------------|
+| `build-only` | Build newsletter HTML without sending |
+| `send-test` | Build and send to your test email address |
+| `send-broadcast` | Build and send to all subscribers |
+
+#### Required Secrets
+
 | Secret | Description |
 |--------|-------------|
-| `POSTMARK_API_KEY` | Postmark API key |
-| `TEST_EMAIL_ADDRESS` | Email for test sends |
-| `NEWSLETTER_SUBSCRIBERS` | Comma-separated subscriber emails |
-| `NEWSLETTER_FROM_EMAIL` | (Optional) From address |
+| `POSTMARK_API_KEY` | Postmark API key for sending emails |
+| `TEST_EMAIL_ADDRESS` | Email address for test sends |
+| `NEWSLETTER_SUBSCRIBERS` | Comma-separated list of subscriber emails |
+| `NEWSLETTER_FROM_EMAIL` | (Optional) Sender email address |
+| `NETLIFY_BUILD_HOOK` | Netlify build hook URL for triggering deploys |
+| `OMDB_API_KEY` | (Optional) OMDB API key for movie metadata enrichment |
+
+#### Workflow Architecture
+
+```
+Push to newsletter/issues/** or templates/**
+           │
+           ▼
+    ┌─────────────────┐
+    │   Build HTML    │
+    │  (React Email)  │
+    └────────┬────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │  Auto-commit    │
+    │ content/news..  │
+    └────────┬────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │ Trigger Netlify │
+    │   Build Hook    │
+    └────────┬────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │  Site Deploys   │
+    │ with new issue  │
+    └─────────────────┘
+```
 
 ## Deployment
 

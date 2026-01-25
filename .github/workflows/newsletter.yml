@@ -66,6 +66,10 @@ jobs:
           git commit -m "chore: rebuild newsletter HTML [skip ci]"
           git push
 
+      - name: Trigger Netlify build
+        if: steps.changes.outputs.changed == 'true' && github.event_name == 'push'
+        run: curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
