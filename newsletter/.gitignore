@@ -1,6 +1,6 @@
 node_modules/
 dist/
-emails/
+/emails/
 .env
 .react-email/
 subscribers.json
