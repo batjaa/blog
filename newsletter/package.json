@@ -1,0 +1,30 @@
+{
+  "name": "batjaa-newsletter",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "predev": "mkdir -p emails && cp templates/emails/*.tsx emails/ && sed -i '' 's|from \"../components\"|from \"../templates/components\"|g' emails/*.tsx",
+    "dev": "email dev -p 3001",
+    "preview": "npm run dev",
+    "build": "tsx scripts/build.ts",
+    "build:issue": "tsx scripts/build.ts --issue",
+    "send:test": "tsx scripts/send.ts --test",
+    "send:broadcast": "tsx scripts/send.ts --broadcast"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.31",
+    "dotenv": "^17.2.3",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.6",
+    "postmark": "^4.0.5",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-email": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

@@ -90,6 +90,132 @@ Configure the following optional features:
   - Get your API key from [Google Cloud Console](https://console.cloud.google.com/google/maps-apis)
   - For production use, create a Map ID in Google Cloud Console and update the `mapId` in `themes/mongkok/assets/js/post.js`
 
+## Newsletter
+
+Monthly newsletter system that generates both email-ready HTML and a web archive.
+
+### Setup (first time only)
+
+```bash
+npm run newsletter:install
+```
+
+### Creating a New Issue
+
+```bash
+# Create newsletter for current month
+npm run newsletter:new
+
+# Or specify a month
+npm run newsletter:new 2026-02
+```
+
+This creates `newsletter/issues/YYYY-MM.md` with a template.
+
+### Writing Content
+
+Edit the markdown file in `newsletter/issues/`. The file has two parts:
+
+**1. YAML Frontmatter** - Structured data for special sections:
+
+```yaml
+---
+title: "February 2026"
+date: 2026-02-01
+featured_image: https://your-cdn.com/hero.jpg
+
+trading:
+  pnl: "+$1,234"
+  sentiment: positive  # positive | negative | neutral
+  chart: https://your-cdn.com/chart.png
+
+movies:
+  - url: https://www.imdb.com/title/tt1234567/
+    comment: "Great movie!"
+
+books:
+  - title: "Book Title"
+    author: "Author Name"
+    status: reading  # reading | finished | abandoned
+---
+```
+
+**2. Markdown Body** - Prose sections using H2 headers:
+
+```markdown
+## Family
+
+Updates about the family...
+
+## Professional
+
+Work updates...
+
+## Health
+
+Fitness progress...
+
+## Travel
+
+Adventures...
+```
+
+### Build & Preview
+
+```bash
+# Build the newsletter (generates HTML for email + web archive)
+npm run newsletter:build
+
+# Preview in browser (hot-reload)
+npm run newsletter:preview
+
+# Send test email to yourself
+npm run newsletter:send:test
+```
+
+### Full Build (Blog + Newsletter)
+
+```bash
+# Build everything for production
+npm run newsletter:build && npm run build
+```
+
+The newsletter will be available at `/newsletter/YYYY-MM/` on the site.
+
+### Environment Variables
+
+For sending emails, set these in your `.env` (local) or GitHub Secrets (CI):
+
+```bash
+# Required
+POSTMARK_API_KEY=your-api-key
+TEST_EMAIL_ADDRESS=your@email.com
+
+# For broadcasting (one of these methods)
+NEWSLETTER_SUBSCRIBERS=email1@example.com,email2@example.com
+# Or create newsletter/subscribers.json: { "subscribers": ["email@example.com"] }
+
+# Optional
+NEWSLETTER_FROM_EMAIL=newsletter@batjaa.com
+```
+
+### GitHub Actions
+
+The newsletter can be sent via GitHub Actions. Go to **Actions** → **Newsletter** → **Run workflow**.
+
+**Options:**
+- `build-only` - Just build the newsletter HTML
+- `send-test` - Build and send test email
+- `send-broadcast` - Build and send to all subscribers
+
+**Required Secrets:**
+| Secret | Description |
+|--------|-------------|
+| `POSTMARK_API_KEY` | Postmark API key |
+| `TEST_EMAIL_ADDRESS` | Email for test sends |
+| `NEWSLETTER_SUBSCRIBERS` | Comma-separated subscriber emails |
+| `NEWSLETTER_FROM_EMAIL` | (Optional) From address |
+
 ## Deployment
 
 ```bash

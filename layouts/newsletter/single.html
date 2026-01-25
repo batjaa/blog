@@ -1,0 +1,18 @@
+{{ define "main" }}
+<article class="newsletter-content">
+    {{ .Content | safeHTML }}
+</article>
+
+<section class="newsletter-subscribe">
+    <h3>Enjoyed this newsletter?</h3>
+    <p>Subscribe to get monthly updates delivered to your inbox.</p>
+    <form class="subscribe-form" action="/api/subscribe" method="POST">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Subscribe</button>
+    </form>
+</section>
+
+<div class="newsletter-archive">
+    <a href="{{ .Site.BaseURL }}newsletter/">View all newsletters →</a>
+</div>
+{{ end }}

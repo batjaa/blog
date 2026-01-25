@@ -2,6 +2,7 @@ languageCode = "en"
 title = "Batjaa's corner"
 theme = "mongkok"
 DefaultContentLanguage = "en"
+buildFuture = true  # Allow future-dated content (e.g., scheduled newsletters)
 disqusShortname = "username" # delete this to disable disqus comments
 googleAnalytics = ""
 

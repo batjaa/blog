@@ -11,7 +11,12 @@
     "css:watch": "lessc --math=always themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css --watch",
     "dev": "npm run css:build && hugo serve --ignoreCache --forceSyncStatic",
     "build": "npm run css:build && hugo --minify",
-    "clean": "rm -rf public"
+    "clean": "rm -rf public",
+    "newsletter:install": "cd newsletter && npm install",
+    "newsletter:build": "cd newsletter && npm run build",
+    "newsletter:preview": "cd newsletter && npm run dev",
+    "newsletter:send:test": "cd newsletter && npm run send:test",
+    "newsletter:new": "node scripts/new-newsletter.js"
   },
   "devDependencies": {
     "less": "^4.2.0"
