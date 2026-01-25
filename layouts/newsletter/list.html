@@ -1,0 +1,34 @@
+{{ define "main" }}
+<div class="newsletter-content" style="padding: 40px;">
+    <h1 style="margin: 0 0 8px 0; font-size: 28px; font-family: Georgia, serif;">Newsletter Archive</h1>
+    <p style="margin: 0 0 32px 0; color: #6b7280;">Monthly updates from our family to yours.</p>
+
+    {{ if .Pages }}
+    <ul style="list-style: none; padding: 0; margin: 0;">
+        {{ range .Pages.ByDate.Reverse }}
+        <li style="border-bottom: 1px solid #e5e7eb; padding: 20px 0;">
+            <a href="{{ .Permalink }}" style="text-decoration: none; display: block;">
+                <span style="font-size: 18px; font-weight: 600; color: #1e293b; display: block; margin-bottom: 4px;">
+                    {{ .Title }}
+                </span>
+                <span style="font-size: 14px; color: #6b7280;">
+                    {{ .Date.Format "January 2006" }}
+                </span>
+            </a>
+        </li>
+        {{ end }}
+    </ul>
+    {{ else }}
+    <p style="color: #6b7280; font-style: italic;">No newsletters yet. Check back soon!</p>
+    {{ end }}
+</div>
+
+<section class="newsletter-subscribe">
+    <h3>Never miss an update</h3>
+    <p>Subscribe to get monthly newsletters delivered to your inbox.</p>
+    <form class="subscribe-form" action="/api/subscribe" method="POST">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Subscribe</button>
+    </form>
+</section>
+{{ end }}
