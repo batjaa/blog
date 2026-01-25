@@ -207,11 +207,12 @@ The newsletter workflow (`.github/workflows/newsletter.yml`) handles both automa
 
 When you push changes to `newsletter/issues/**` or `newsletter/templates/**` on the `master` or `main` branch:
 
-1. **Build** - Renders markdown issues into HTML
-2. **Auto-commit** - Commits generated HTML to `content/newsletter/` (with `[skip ci]` to prevent loops)
-3. **Trigger Netlify** - Fires the Netlify build hook to deploy the updated site
+1. **Build** - Validates by rendering markdown issues into HTML
+2. **Trigger Netlify** - Fires the Netlify build hook to deploy
 
-This means you can edit newsletter content, push to GitHub, and the web archive updates automatically.
+Netlify then runs the full build (`npm run newsletter:build && hugo`) to generate and deploy the site.
+
+> **Note:** Generated HTML (`content/newsletter/`, `newsletter/dist/`) is gitignored. Netlify builds from source on each deploy.
 
 #### Manual Triggers
 
@@ -234,35 +235,15 @@ Go to **Actions** → **Newsletter** → **Run workflow** to manually trigger:
 | `NETLIFY_BUILD_HOOK` | Netlify build hook URL for triggering deploys |
 | `OMDB_API_KEY` | (Optional) OMDB API key for movie metadata enrichment |
 
-#### Workflow Architecture
+#### Netlify Configuration
+
+Set your Netlify build command to:
 
 ```
-Push to newsletter/issues/** or templates/**
-           │
-           ▼
-    ┌─────────────────┐
-    │   Build HTML    │
-    │  (React Email)  │
-    └────────┬────────┘
-             │
-             ▼
-    ┌─────────────────┐
-    │  Auto-commit    │
-    │ content/news..  │
-    └────────┬────────┘
-             │
-             ▼
-    ┌─────────────────┐
-    │ Trigger Netlify │
-    │   Build Hook    │
-    └────────┬────────┘
-             │
-             ▼
-    ┌─────────────────┐
-    │  Site Deploys   │
-    │ with new issue  │
-    └─────────────────┘
+npm run newsletter:build && npm run build
 ```
+
+This ensures newsletter HTML is generated before Hugo builds the site.
 
 ## Deployment
 

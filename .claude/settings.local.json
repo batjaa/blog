@@ -15,7 +15,9 @@
       "Bash(hugo:*)",
       "Bash(npm run newsletter:new:*)",
       "Bash(npm run newsletter:build:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm view:*)",
+      "Bash(git rm:*)"
     ]
   }
 }

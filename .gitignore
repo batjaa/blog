@@ -8,3 +8,8 @@
 .env
 public/
 node_modules/
+
+# Generated newsletter HTML
+content/newsletter/*.html
+newsletter/dist/
+newsletter/emails/
