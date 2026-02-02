@@ -1,0 +1,18 @@
+[build]
+  publish = "public"
+  command = "npm run build"
+  functions = "functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Redirect /api/subscribe to the Netlify function
+[[redirects]]
+  from = "/api/subscribe"
+  to = "/.netlify/functions/subscribe"
+  status = 200
+
+[[redirects]]
+  from = "/api/unsubscribe"
+  to = "/.netlify/functions/unsubscribe"
+  status = 200

@@ -16,11 +16,19 @@
     "newsletter:build": "cd newsletter && npm run build",
     "newsletter:preview": "cd newsletter && npm run dev",
     "newsletter:send:test": "cd newsletter && npm run send:test",
-    "newsletter:new": "node scripts/new-newsletter.js"
+    "newsletter:new": "node scripts/new-newsletter.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
-    "less": "^4.2.0"
+    "@netlify/functions": "^5.1.2",
+    "@types/node": "^25.2.0",
+    "less": "^4.2.0",
+    "vitest": "^4.0.18"
   },
   "author": "Batjargal Batbold",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@libsql/client": "^0.17.0"
+  }
 }
