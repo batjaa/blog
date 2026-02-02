@@ -14,20 +14,23 @@
   "dependencies": {
     "@libsql/client": "^0.17.0",
     "@react-email/components": "^1.0.6",
-    "@react-email/preview-server": "^5.2.5",
     "@react-email/render": "^1.0.6",
     "dotenv": "^17.2.3",
     "gray-matter": "^4.0.3",
     "marked": "^15.0.6",
     "postmark": "^4.0.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-email": "^5.2.5"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@react-email/preview-server": "^5.2.5",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.0",
+    "react-email": "^5.2.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
+  },
+  "overrides": {
+    "next": "16.1.5"
   }
 }
