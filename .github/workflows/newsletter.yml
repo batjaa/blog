@@ -37,26 +37,18 @@ jobs:
           cache-dependency-path: newsletter/package-lock.json
 
       - name: Install dependencies
-        run: |
-          npm ci
-          cd newsletter && npm ci
+        run: cd newsletter && npm ci
 
       - name: Build newsletter
         run: npm run newsletter:build
         env:
           OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
 
-      - name: Trigger Netlify build
-        if: github.event_name == 'push'
-        run: curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
-
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: newsletter-html
-          path: |
-            newsletter/dist/*.html
-            content/newsletter/*.html
+          path: newsletter/dist/*.html
 
       - name: Summary
         run: |
@@ -88,12 +80,13 @@ jobs:
           cache-dependency-path: newsletter/package-lock.json
 
       - name: Install dependencies
-        run: |
-          npm ci
-          cd newsletter && npm ci
+        run: cd newsletter && npm ci
 
-      - name: Build newsletter
-        run: npm run newsletter:build
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: newsletter-html
+          path: newsletter/dist
 
       - name: Send test email
         if: github.event.inputs.action == 'send-test'
@@ -107,8 +100,9 @@ jobs:
         run: npm run newsletter:send:broadcast
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
-          NEWSLETTER_SUBSCRIBERS: ${{ secrets.NEWSLETTER_SUBSCRIBERS }}
           NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
 
       - name: Send Summary
         run: |

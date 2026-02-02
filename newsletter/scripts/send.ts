@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { config } from "dotenv";
 import { ServerClient } from "postmark";
+import { createClient } from "@libsql/client";
 
 // Load .env from project root
 config({ path: path.join(__dirname, "../../.env") });
@@ -14,20 +15,20 @@ interface SendResult {
 }
 
 async function getSubscribers(): Promise<string[]> {
-  // Option 1: From environment variable (comma-separated)
-  const envSubscribers = process.env.NEWSLETTER_SUBSCRIBERS;
-  if (envSubscribers) {
-    return envSubscribers.split(",").map((e) => e.trim()).filter(Boolean);
+  const dbUrl = process.env.TURSO_DATABASE_URL;
+  const authToken = process.env.TURSO_AUTH_TOKEN;
+
+  if (!dbUrl || !authToken) {
+    throw new Error("TURSO_DATABASE_URL and TURSO_AUTH_TOKEN are required");
   }
 
-  // Option 2: From local file (not committed to repo)
-  const subscribersFile = path.join(__dirname, "../subscribers.json");
-  if (fs.existsSync(subscribersFile)) {
-    const data = JSON.parse(fs.readFileSync(subscribersFile, "utf-8"));
-    return data.subscribers || [];
-  }
+  const client = createClient({ url: dbUrl, authToken });
 
-  return [];
+  const result = await client.execute(
+    "SELECT email FROM subscribers WHERE unsubscribed_at IS NULL ORDER BY created_at"
+  );
+
+  return result.rows.map((row) => row.email as string);
 }
 
 function extractTitle(html: string): string {
@@ -77,11 +78,7 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
     const subscribers = await getSubscribers();
 
     if (subscribers.length === 0) {
-      console.error("❌ No subscribers found.");
-      console.log("");
-      console.log("Set subscribers via one of these methods:");
-      console.log("  1. NEWSLETTER_SUBSCRIBERS env var (comma-separated emails)");
-      console.log("  2. newsletter/subscribers.json file: { \"subscribers\": [\"a@b.com\"] }");
+      console.error("❌ No active subscribers found in Turso DB.");
       process.exit(1);
     }
 

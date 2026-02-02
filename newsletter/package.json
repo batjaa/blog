@@ -12,6 +12,7 @@
     "send:broadcast": "tsx scripts/send.ts --broadcast"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "@react-email/components": "^1.0.6",
     "@react-email/preview-server": "^5.2.5",
     "@react-email/render": "^1.0.6",
