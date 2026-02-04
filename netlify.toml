@@ -1,6 +1,4 @@
 [build]
-  publish = "public/en"
-  command = "npm run css:build && hugo --ignoreCache --forceSyncStatic -t mongkok"
   functions = "netlify/functions"
 
 [functions]
