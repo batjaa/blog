@@ -182,6 +182,20 @@ npm run newsletter:build && npm run build
 
 The newsletter will be available at `/newsletter/YYYY-MM/` on the site.
 
+### Images
+
+Upload images to S3 (served via CloudFront):
+
+```bash
+aws s3 cp photo.jpg s3://batjaa-blog-email-media/2026/02/photo.jpg
+```
+
+Then reference in your newsletter as:
+
+```
+https://d2f2jpla7ooipu.cloudfront.net/2026/02/photo.jpg
+```
+
 ### Environment Variables
 
 For sending emails, set these in your `.env` (local) or GitHub Secrets (CI):
@@ -190,10 +204,8 @@ For sending emails, set these in your `.env` (local) or GitHub Secrets (CI):
 # Required
 POSTMARK_API_KEY=your-api-key
 TEST_EMAIL_ADDRESS=your@email.com
-
-# For broadcasting (one of these methods)
-NEWSLETTER_SUBSCRIBERS=email1@example.com,email2@example.com
-# Or create newsletter/subscribers.json: { "subscribers": ["email@example.com"] }
+TURSO_DATABASE_URL=libsql://your-db.turso.io
+TURSO_AUTH_TOKEN=your-token
 
 # Optional
 NEWSLETTER_FROM_EMAIL=newsletter@batjaa.com
@@ -207,12 +219,8 @@ The newsletter workflow (`.github/workflows/newsletter.yml`) handles both automa
 
 When you push changes to `newsletter/issues/**` or `newsletter/templates/**` on the `master` or `main` branch:
 
-1. **Build** - Validates by rendering markdown issues into HTML
-2. **Trigger Netlify** - Fires the Netlify build hook to deploy
-
-Netlify then runs the full build (`npm run newsletter:build && hugo`) to generate and deploy the site.
-
-> **Note:** Generated HTML (`content/newsletter/`, `newsletter/dist/`) is gitignored. Netlify builds from source on each deploy.
+1. **Build** - Renders markdown issues into HTML
+2. **Netlify auto-deploys** - Triggered by the push to master
 
 #### Manual Triggers
 
@@ -230,20 +238,10 @@ Go to **Actions** → **Newsletter** → **Run workflow** to manually trigger:
 |--------|-------------|
 | `POSTMARK_API_KEY` | Postmark API key for sending emails |
 | `TEST_EMAIL_ADDRESS` | Email address for test sends |
-| `NEWSLETTER_SUBSCRIBERS` | Comma-separated list of subscriber emails |
+| `TURSO_DATABASE_URL` | Turso database URL for subscriber list |
+| `TURSO_AUTH_TOKEN` | Turso auth token |
 | `NEWSLETTER_FROM_EMAIL` | (Optional) Sender email address |
-| `NETLIFY_BUILD_HOOK` | Netlify build hook URL for triggering deploys |
 | `OMDB_API_KEY` | (Optional) OMDB API key for movie metadata enrichment |
-
-#### Netlify Configuration
-
-Set your Netlify build command to:
-
-```
-npm run newsletter:build && npm run build
-```
-
-This ensures newsletter HTML is generated before Hugo builds the site.
 
 ## Deployment
 

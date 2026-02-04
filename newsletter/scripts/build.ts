@@ -94,23 +94,44 @@ async function markdownToHtml(md: string): Promise<string> {
     .replace(/<a /g, '<a style="color: #2563eb; text-decoration: underline;" ');
 }
 
-// Fetch movie metadata from OMDB (placeholder - would need real API key)
+// Fetch movie metadata from OMDB API
 async function enrichMovies(movies: MovieFrontmatter[]): Promise<any[]> {
-  // For now, just extract IMDB ID and use placeholder data
-  // In production, this would call OMDB API
-  return movies.map((movie) => {
-    const imdbIdMatch = movie.url.match(/tt\d+/);
-    const imdbId = imdbIdMatch ? imdbIdMatch[0] : null;
+  const apiKey = process.env.OMDB_API_KEY;
 
-    return {
-      title: imdbId ? `Movie ${imdbId}` : "Unknown Movie",
-      year: "2024",
-      posterUrl: `https://placehold.co/100x150/1e293b/ffffff?text=Poster`,
-      rating: "8.5",
-      comment: movie.comment,
-      imdbUrl: movie.url,
-    };
-  });
+  return Promise.all(
+    movies.map(async (movie) => {
+      const imdbIdMatch = movie.url.match(/tt\d+/);
+      const imdbId = imdbIdMatch ? imdbIdMatch[0] : null;
+
+      if (imdbId && apiKey) {
+        try {
+          const res = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${apiKey}`);
+          const data = await res.json();
+          if (data.Response === "True") {
+            return {
+              title: data.Title,
+              year: data.Year?.replace("–", ""),
+              posterUrl: data.Poster !== "N/A" ? data.Poster : undefined,
+              rating: data.imdbRating !== "N/A" ? data.imdbRating : undefined,
+              comment: movie.comment,
+              imdbUrl: movie.url,
+            };
+          }
+        } catch (err) {
+          console.warn(`  ⚠ OMDB fetch failed for ${imdbId}: ${err}`);
+        }
+      }
+
+      return {
+        title: imdbId ? `Movie ${imdbId}` : "Unknown Movie",
+        year: undefined,
+        posterUrl: undefined,
+        rating: undefined,
+        comment: movie.comment,
+        imdbUrl: movie.url,
+      };
+    })
+  );
 }
 
 async function buildIssue(filename: string): Promise<void> {
@@ -195,13 +216,18 @@ async function buildIssue(filename: string): Promise<void> {
   const dateObj = new Date(frontmatter.date);
   const hugoDate = dateObj.toISOString().split("T")[0];
 
+  // Escape {{ and }} for Hugo — it interprets these as Go template syntax
+  const hugoSafeHtml = html
+    .replace(/{{/g, '{ {')
+    .replace(/}}/g, '} }');
+
   const hugoContent = `---
 title: "${frontmatter.title}"
 date: ${hugoDate}
 type: newsletter
 layout: single
 ---
-${html}`;
+${hugoSafeHtml}`;
 
   const hugoPath = path.join(HUGO_NEWSLETTER_DIR, `${slug}.html`);
   fs.writeFileSync(hugoPath, hugoContent);
