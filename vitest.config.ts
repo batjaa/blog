@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    include: ["functions/__tests__/**/*.test.ts"],
-    setupFiles: ["functions/__tests__/setup.ts"],
+    include: ["netlify/functions/__tests__/**/*.test.ts"],
+    setupFiles: ["netlify/functions/__tests__/setup.ts"],
   },
 });
