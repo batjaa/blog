@@ -136,6 +136,12 @@ staticDir = "static"
   hover = "&#xf16d;"
   weight = 20
 [[params.social]]
+  url = "https://www.instagram.com/wander.van"
+  name = "instagram"
+  icon = "fa-instagram"
+  hover = "&#xf16d;"
+  weight = 20
+[[params.social]]
   url = "https://stackoverflow.com/story/batjaa"
   name = "stack-overflow"
   icon = "fa-stack-overflow"
