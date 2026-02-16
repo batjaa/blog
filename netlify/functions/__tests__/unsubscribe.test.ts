@@ -100,10 +100,11 @@ describe("unsubscribe function", () => {
     });
     await handler(event, {} as any);
 
-    expect(mockExecute).toHaveBeenCalledWith({
-      sql: "UPDATE subscribers SET unsubscribed_at = CURRENT_TIMESTAMP WHERE email = ? AND unsubscribed_at IS NULL",
-      args: ["user@example.com"],
-    });
+    expect(mockExecute).toHaveBeenCalledWith(
+      expect.objectContaining({
+        args: ["user@example.com"],
+      })
+    );
   });
 
   it("accepts JSON content type", async () => {

@@ -1,5 +1,7 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
 import { getDbClient } from "./db";
+import { ensureSubscribersSchema } from "./subscribers";
+import { verifySignedToken } from "./signed-token";
 
 function getHeader(headers: Record<string, string | undefined>, name: string) {
   const target = name.toLowerCase();
@@ -21,17 +23,20 @@ const handler: Handler = async (event: HandlerEvent) => {
     };
   }
 
-  // Parse email from query params (GET) or body (POST)
+  // Parse token/email from query params (GET) or body (POST)
+  let token: string | undefined;
   let email: string | undefined;
 
   if (event.httpMethod === "GET") {
     const params = new URLSearchParams(event.rawQuery || "");
+    token = params.get("token") || undefined;
     email = params.get("email") || undefined;
   } else {
     const contentType = getHeader(event.headers || {}, "content-type");
     if (contentType.includes("application/json")) {
       try {
         const body = JSON.parse(event.body || "{}");
+        token = body.token;
         email = body.email;
       } catch {
         return {
@@ -42,7 +47,51 @@ const handler: Handler = async (event: HandlerEvent) => {
       }
     } else {
       const params = new URLSearchParams(event.body || "");
+      token = params.get("token") || undefined;
       email = params.get("email") || undefined;
+    }
+  }
+
+  if (token) {
+    const secret = process.env.NEWSLETTER_TOKEN_SECRET;
+    if (!secret) {
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Missing NEWSLETTER_TOKEN_SECRET" }),
+      };
+    }
+
+    const payload = verifySignedToken<{ email?: string; exp?: number; type?: string }>(token, secret);
+    if (payload && payload.type === "unsubscribe" && payload.email) {
+      if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+        return {
+          statusCode: 400,
+          headers: { "Content-Type": "text/html" },
+          body: `<!DOCTYPE html>
+<html>
+<head><title>Unsubscribe</title></head>
+<body style="font-family: system-ui, sans-serif; max-width: 400px; margin: 50px auto; text-align: center;">
+  <h2>Link expired</h2>
+  <p>This unsubscribe link has expired.</p>
+</body>
+</html>`,
+        };
+      }
+      email = payload.email;
+    } else {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "text/html" },
+        body: `<!DOCTYPE html>
+<html>
+<head><title>Unsubscribe</title></head>
+<body style="font-family: system-ui, sans-serif; max-width: 400px; margin: 50px auto; text-align: center;">
+  <h2>Invalid link</h2>
+  <p>This unsubscribe link is invalid.</p>
+</body>
+</html>`,
+      };
     }
   }
 
@@ -66,9 +115,19 @@ const handler: Handler = async (event: HandlerEvent) => {
 
   try {
     const db = getDbClient();
+    await ensureSubscribersSchema(db);
 
     const result = await db.execute({
-      sql: "UPDATE subscribers SET unsubscribed_at = CURRENT_TIMESTAMP WHERE email = ? AND unsubscribed_at IS NULL",
+      sql: `
+        UPDATE subscribers
+        SET
+          status = 'unsubscribed',
+          unsubscribed_at = CURRENT_TIMESTAMP,
+          confirm_token_hash = NULL,
+          confirm_token_expires_at = NULL,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE email = ? AND unsubscribed_at IS NULL
+      `,
       args: [email],
     });
 

@@ -16,6 +16,16 @@
   status = 200
 
 [[redirects]]
+  from = "/api/confirm"
+  to = "/.netlify/functions/confirm"
+  status = 200
+
+[[redirects]]
+  from = "/api/postmark/webhook"
+  to = "/.netlify/functions/postmark-webhook"
+  status = 200
+
+[[redirects]]
   from = "/api/test"
   to = "/.netlify/functions/test"
   status = 200

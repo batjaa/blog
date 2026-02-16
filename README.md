@@ -206,10 +206,16 @@ POSTMARK_API_KEY=your-api-key
 TEST_EMAIL_ADDRESS=your@email.com
 TURSO_DATABASE_URL=libsql://your-db.turso.io
 TURSO_AUTH_TOKEN=your-token
+NEWSLETTER_TOKEN_SECRET=generate-a-long-random-secret
 
 # Optional
 NEWSLETTER_FROM_EMAIL=newsletter@batjaa.com
 ```
+
+For Postmark webhooks, configure:
+
+- URL: `https://batjaa.com/api/postmark/webhook`
+- Header `X-Postmark-Server-Token`: value from `POSTMARK_WEBHOOK_TOKEN` (if set)
 
 ### GitHub Actions
 
@@ -240,7 +246,9 @@ Go to **Actions** → **Newsletter** → **Run workflow** to manually trigger:
 | `TEST_EMAIL_ADDRESS` | Email address for test sends |
 | `TURSO_DATABASE_URL` | Turso database URL for subscriber list |
 | `TURSO_AUTH_TOKEN` | Turso auth token |
+| `NEWSLETTER_TOKEN_SECRET` | HMAC secret used for unsubscribe links |
 | `NEWSLETTER_FROM_EMAIL` | (Optional) Sender email address |
+| `POSTMARK_WEBHOOK_TOKEN` | (Optional) Verifies Postmark webhook requests |
 | `OMDB_API_KEY` | (Optional) OMDB API key for movie metadata enrichment |
 
 ## Deployment

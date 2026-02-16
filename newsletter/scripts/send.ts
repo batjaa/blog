@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
+import { createHmac } from "crypto";
 import { config } from "dotenv";
 import { ServerClient } from "postmark";
-import { createClient } from "@libsql/client";
+import { createClient } from "@libsql/client/web";
 
 // Load .env from project root
 config({ path: path.join(__dirname, "../../.env") });
@@ -12,6 +13,30 @@ const DIST_DIR = path.join(__dirname, "../dist");
 interface SendResult {
   successful: string[];
   failed: { email: string; error: string }[];
+}
+
+function createSignedToken(payload: Record<string, unknown>, secret: string): string {
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const signature = createHmac("sha256", secret).update(encodedPayload).digest("base64url");
+  return `${encodedPayload}.${signature}`;
+}
+
+function buildUnsubscribeUrl(email: string): string {
+  const secret = process.env.NEWSLETTER_TOKEN_SECRET;
+  if (!secret) {
+    throw new Error("NEWSLETTER_TOKEN_SECRET environment variable is required");
+  }
+
+  const baseUrl = (process.env.SITE_URL || process.env.URL || "https://batjaa.com").replace(/\/$/, "");
+  const exp = Math.floor(Date.now() / 1000) + 3650 * 24 * 60 * 60; // 10 years
+  const token = createSignedToken({ type: "unsubscribe", email, exp }, secret);
+  return `${baseUrl}/api/unsubscribe?token=${encodeURIComponent(token)}`;
+}
+
+function injectUnsubscribeUrl(html: string, unsubscribeUrl: string): string {
+  return html
+    .replace(/\{\{\s*unsubscribe_url\s*\}\}/g, unsubscribeUrl)
+    .replace(/\{\s*\{\s*unsubscribe_url\s*\}\s*\}/g, unsubscribeUrl);
 }
 
 async function getSubscribers(): Promise<string[]> {
@@ -24,9 +49,14 @@ async function getSubscribers(): Promise<string[]> {
 
   const client = createClient({ url: dbUrl, authToken });
 
-  const result = await client.execute(
-    "SELECT email FROM subscribers WHERE unsubscribed_at IS NULL ORDER BY created_at"
-  );
+  const result = await client.execute(`
+    SELECT email
+    FROM subscribers
+    WHERE status = 'active'
+      AND unsubscribed_at IS NULL
+      AND suppressed_at IS NULL
+    ORDER BY COALESCE(confirmed_at, subscribed_at, created_at)
+  `);
 
   return result.rows.map((row) => row.email as string);
 }
@@ -61,15 +91,15 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
 
   if (isTest) {
     console.log(`📧 Sending test email to: ${testEmail}`);
+    const testHtml = injectUnsubscribeUrl(html, buildUnsubscribeUrl(testEmail!));
 
     await client.sendEmail({
       From: fromEmail,
       To: testEmail!,
       Subject: `[TEST] ${title}`,
-      HtmlBody: html,
+      HtmlBody: testHtml,
       MessageStream: "outbound",
       TrackOpens: true,
-      TrackLinks: "HtmlOnly",
     });
 
     console.log("✅ Test email sent successfully!");
@@ -93,15 +123,17 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
     for (let i = 0; i < subscribers.length; i += batchSize) {
       const batch = subscribers.slice(i, i + batchSize);
 
-      const messages = batch.map((email) => ({
-        From: fromEmail,
-        To: email,
-        Subject: title,
-        HtmlBody: html,
-        MessageStream: "broadcast" as const,
-        TrackOpens: true,
-        TrackLinks: "HtmlOnly" as const,
-      }));
+      const messages = batch.map((email) => {
+        const htmlBody = injectUnsubscribeUrl(html, buildUnsubscribeUrl(email));
+        return {
+          From: fromEmail,
+          To: email,
+          Subject: title,
+          HtmlBody: htmlBody,
+          MessageStream: "broadcast" as const,
+          TrackOpens: true,
+        };
+      });
 
       try {
         const response = await client.sendEmailBatch(messages);

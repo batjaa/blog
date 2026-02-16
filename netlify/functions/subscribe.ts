@@ -1,5 +1,7 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
+import { randomBytes } from "crypto";
 import { getDbClient } from "./db";
+import { ensureSubscribersSchema, getSubscriberByEmail, hashToken } from "./subscribers";
 
 function getHeader(headers: Record<string, string | undefined>, name: string) {
   const target = name.toLowerCase();
@@ -57,6 +59,45 @@ function buildResponse(
   };
 }
 
+async function sendConfirmationEmail(email: string, token: string) {
+  const postmarkToken = process.env.POSTMARK_API_KEY;
+  if (!postmarkToken) {
+    throw new Error("Missing POSTMARK_API_KEY");
+  }
+
+  const baseUrl = (process.env.SITE_URL || process.env.URL || "https://batjaa.com").replace(/\/$/, "");
+  const confirmUrl = `${baseUrl}/api/confirm?token=${encodeURIComponent(token)}`;
+  const fromEmail = process.env.NEWSLETTER_FROM_EMAIL || "newsletter@batjaa.com";
+
+  const response = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "X-Postmark-Server-Token": postmarkToken,
+    },
+    body: JSON.stringify({
+      From: fromEmail,
+      To: email,
+      Subject: "Confirm your newsletter subscription",
+      MessageStream: "outbound",
+      HtmlBody: `
+        <h2>Confirm your subscription</h2>
+        <p>Click the button below to confirm your subscription to Batjaa's newsletter.</p>
+        <p><a href="${confirmUrl}" style="display:inline-block;padding:10px 16px;background:#3b82f6;color:#fff;text-decoration:none;border-radius:6px;">Confirm subscription</a></p>
+        <p>If the button doesn't work, open this link:</p>
+        <p><a href="${confirmUrl}">${confirmUrl}</a></p>
+      `,
+      TextBody: `Confirm your newsletter subscription:\n\n${confirmUrl}`,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Postmark send failed: ${response.status} ${errorBody}`);
+  }
+}
+
 const handler: Handler = async (event: HandlerEvent) => {
   // Only allow POST
   if (event.httpMethod !== "POST") {
@@ -94,41 +135,58 @@ const handler: Handler = async (event: HandlerEvent) => {
 
   try {
     const db = getDbClient();
+    await ensureSubscribersSchema(db);
 
-    // Check if already subscribed
-    const existing = await db.execute({
-      sql: "SELECT id, unsubscribed_at FROM subscribers WHERE email = ?",
-      args: [email],
-    });
+    const existing = await getSubscriberByEmail(db, email);
 
-    if (existing.rows.length > 0) {
-      const row = existing.rows[0];
-      if (row.unsubscribed_at) {
-        // Re-subscribe
-        await db.execute({
-          sql: "UPDATE subscribers SET unsubscribed_at = NULL, subscribed_at = CURRENT_TIMESTAMP WHERE email = ?",
-          args: [email],
-        });
-        return buildResponse(event, 200, {
-          success: true,
-          message: "Welcome back! You've been re-subscribed.",
-        });
-      }
+    if (existing?.status === "active" && !existing.unsubscribed_at && !existing.suppressed_at) {
       return buildResponse(event, 200, {
         success: true,
         message: "You're already subscribed!",
       });
     }
 
-    // Insert new subscriber
+    if (existing?.status === "suppressed") {
+      return buildResponse(event, 400, {
+        error: "This address cannot be subscribed right now. Please contact support.",
+      });
+    }
+
+    const confirmationToken = randomBytes(32).toString("hex");
+    const tokenHash = hashToken(confirmationToken);
+    const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
     await db.execute({
-      sql: "INSERT INTO subscribers (email) VALUES (?)",
-      args: [email],
+      sql: `
+        INSERT INTO subscribers (
+          email,
+          status,
+          confirm_token_hash,
+          confirm_token_expires_at,
+          confirmed,
+          confirmed_at,
+          unsubscribed_at,
+          updated_at,
+          subscribed_at
+        ) VALUES (?, 'pending', ?, ?, 0, NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ON CONFLICT(email) DO UPDATE SET
+          status = 'pending',
+          confirm_token_hash = excluded.confirm_token_hash,
+          confirm_token_expires_at = excluded.confirm_token_expires_at,
+          confirmed = 0,
+          confirmed_at = NULL,
+          unsubscribed_at = NULL,
+          updated_at = CURRENT_TIMESTAMP,
+          subscribed_at = CURRENT_TIMESTAMP
+      `,
+      args: [email, tokenHash, expiry],
     });
+
+    await sendConfirmationEmail(email, confirmationToken);
 
     return buildResponse(event, 200, {
       success: true,
-      message: "Successfully subscribed!",
+      message: "Check your inbox to confirm your subscription.",
     });
   } catch (error) {
     console.error("Subscribe error:", error);

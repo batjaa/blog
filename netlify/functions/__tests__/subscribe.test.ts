@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { mockExecute, createMockEvent, resetMocks } from "./setup";
+import {
+  mockExecute,
+  createMockEvent,
+  resetMocks,
+  mockGetSubscriberByEmail,
+  mockFetch,
+} from "./setup";
 import { handler } from "../subscribe";
 
 describe("subscribe function", () => {
@@ -39,10 +45,9 @@ describe("subscribe function", () => {
     expect(JSON.parse(result.body)).toEqual({ error: "Invalid email format" });
   });
 
-  it("subscribes new email successfully", async () => {
-    mockExecute
-      .mockResolvedValueOnce({ rows: [] }) // No existing subscriber
-      .mockResolvedValueOnce({ rowsAffected: 1 }); // Insert success
+  it("sends confirmation for new subscription", async () => {
+    mockGetSubscriberByEmail.mockResolvedValueOnce(null);
+    mockExecute.mockResolvedValueOnce({ rowsAffected: 1 });
 
     const event = createMockEvent({
       httpMethod: "POST",
@@ -54,14 +59,22 @@ describe("subscribe function", () => {
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.body)).toEqual({
       success: true,
-      message: "Successfully subscribed!",
+      message: "Check your inbox to confirm your subscription.",
     });
-    expect(mockExecute).toHaveBeenCalledTimes(2);
+    expect(mockExecute).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 
   it("handles already subscribed email", async () => {
-    mockExecute.mockResolvedValueOnce({
-      rows: [{ id: 1, unsubscribed_at: null }],
+    mockGetSubscriberByEmail.mockResolvedValueOnce({
+      email: "existing@example.com",
+      status: "active",
+      confirm_token_hash: null,
+      confirm_token_expires_at: null,
+      confirmed_at: null,
+      unsubscribed_at: null,
+      suppressed_at: null,
+      suppression_reason: null,
     });
 
     const event = createMockEvent({
@@ -76,34 +89,37 @@ describe("subscribe function", () => {
       success: true,
       message: "You're already subscribed!",
     });
-    expect(mockExecute).toHaveBeenCalledTimes(1);
+    expect(mockExecute).toHaveBeenCalledTimes(0);
   });
 
-  it("re-subscribes previously unsubscribed email", async () => {
-    mockExecute
-      .mockResolvedValueOnce({
-        rows: [{ id: 1, unsubscribed_at: "2024-01-01" }],
-      })
-      .mockResolvedValueOnce({ rowsAffected: 1 });
+  it("blocks suppressed email", async () => {
+    mockGetSubscriberByEmail.mockResolvedValueOnce({
+      email: "suppressed@example.com",
+      status: "suppressed",
+      confirm_token_hash: null,
+      confirm_token_expires_at: null,
+      confirmed_at: null,
+      unsubscribed_at: null,
+      suppressed_at: "2026-01-01",
+      suppression_reason: "bounce",
+    });
 
     const event = createMockEvent({
       httpMethod: "POST",
-      body: "email=returning@example.com",
+      body: "email=suppressed@example.com",
       headers: { "content-type": "application/x-www-form-urlencoded" },
     });
     const result = await handler(event, {} as any);
 
-    expect(result.statusCode).toBe(200);
+    expect(result.statusCode).toBe(400);
     expect(JSON.parse(result.body)).toEqual({
-      success: true,
-      message: "Welcome back! You've been re-subscribed.",
+      error: "This address cannot be subscribed right now. Please contact support.",
     });
   });
 
-  it("normalizes email to lowercase", async () => {
-    mockExecute
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rowsAffected: 1 });
+  it("normalizes email to lowercase for lookup", async () => {
+    mockGetSubscriberByEmail.mockResolvedValueOnce(null);
+    mockExecute.mockResolvedValueOnce({ rowsAffected: 1 });
 
     const event = createMockEvent({
       httpMethod: "POST",
@@ -112,16 +128,12 @@ describe("subscribe function", () => {
     });
     await handler(event, {} as any);
 
-    expect(mockExecute).toHaveBeenCalledWith({
-      sql: "SELECT id, unsubscribed_at FROM subscribers WHERE email = ?",
-      args: ["test@example.com"],
-    });
+    expect(mockGetSubscriberByEmail).toHaveBeenCalledWith(expect.anything(), "test@example.com");
   });
 
   it("accepts JSON content type", async () => {
-    mockExecute
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rowsAffected: 1 });
+    mockGetSubscriberByEmail.mockResolvedValueOnce(null);
+    mockExecute.mockResolvedValueOnce({ rowsAffected: 1 });
 
     const event = createMockEvent({
       httpMethod: "POST",
@@ -134,7 +146,27 @@ describe("subscribe function", () => {
     expect(JSON.parse(result.body).success).toBe(true);
   });
 
+  it("returns HTML for browser form posts when accept is text/html", async () => {
+    mockGetSubscriberByEmail.mockResolvedValueOnce(null);
+    mockExecute.mockResolvedValueOnce({ rowsAffected: 1 });
+
+    const event = createMockEvent({
+      httpMethod: "POST",
+      body: "email=html@example.com",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        accept: "text/html",
+      },
+    });
+    const result = await handler(event, {} as any);
+
+    expect(result.statusCode).toBe(200);
+    expect(result.headers?.["Content-Type"]).toBe("text/html");
+    expect(result.body).toContain("You're subscribed");
+  });
+
   it("handles database errors gracefully", async () => {
+    mockGetSubscriberByEmail.mockResolvedValueOnce(null);
     mockExecute.mockRejectedValueOnce(new Error("Database connection failed"));
 
     const event = createMockEvent({
