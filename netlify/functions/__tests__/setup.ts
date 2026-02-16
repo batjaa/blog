@@ -3,7 +3,7 @@ import { vi } from "vitest";
 // Mock the libsql client
 export const mockExecute = vi.fn();
 
-vi.mock("@libsql/client", () => ({
+vi.mock("@libsql/client/web", () => ({
   createClient: () => ({
     execute: mockExecute,
   }),
