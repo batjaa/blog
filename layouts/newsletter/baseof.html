@@ -147,6 +147,26 @@
             background: #2563eb;
         }
 
+        .subscribe-form button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .subscribe-status {
+            margin: 14px auto 0;
+            max-width: 400px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .subscribe-status.success {
+            color: #166534;
+        }
+
+        .subscribe-status.error {
+            color: #b91c1c;
+        }
+
         /* Archive link */
         .newsletter-archive {
             text-align: center;
@@ -270,5 +290,57 @@
             Made with ♥ in Bothell, WA
         </p>
     </footer>
+    <script>
+        (function () {
+            var forms = document.querySelectorAll(".subscribe-form");
+            forms.forEach(function (form) {
+                form.addEventListener("submit", async function (event) {
+                    event.preventDefault();
+
+                    var emailInput = form.querySelector('input[name="email"]');
+                    var submitButton = form.querySelector('button[type="submit"]');
+                    var statusEl = form.parentElement.querySelector(".subscribe-status");
+                    if (!emailInput || !submitButton || !statusEl) {
+                        return;
+                    }
+
+                    statusEl.hidden = true;
+                    statusEl.textContent = "";
+                    statusEl.classList.remove("success", "error");
+                    submitButton.disabled = true;
+                    var originalButtonText = submitButton.textContent;
+                    submitButton.textContent = "Subscribing...";
+
+                    try {
+                        var response = await fetch(form.action, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify({ email: emailInput.value.trim() })
+                        });
+                        var payload = await response.json().catch(function () { return {}; });
+
+                        if (response.ok && payload.success) {
+                            statusEl.textContent = payload.message || "Thanks for subscribing!";
+                            statusEl.classList.add("success");
+                            form.reset();
+                        } else {
+                            statusEl.textContent = payload.error || "Subscription failed. Please try again.";
+                            statusEl.classList.add("error");
+                        }
+                    } catch (error) {
+                        statusEl.textContent = "Network error. Please try again in a moment.";
+                        statusEl.classList.add("error");
+                    } finally {
+                        statusEl.hidden = false;
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText || "Subscribe";
+                    }
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
