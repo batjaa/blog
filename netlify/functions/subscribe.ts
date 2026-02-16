@@ -1,10 +1,15 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
-import { createClient } from "@libsql/client";
+import { getDbClient } from "./db";
 
-const db = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN,
-});
+function getHeader(headers: Record<string, string | undefined>, name: string) {
+  const target = name.toLowerCase();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() === target) {
+      return value || "";
+    }
+  }
+  return "";
+}
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Only allow POST
@@ -18,7 +23,7 @@ const handler: Handler = async (event: HandlerEvent) => {
 
   // Parse form data or JSON
   let email: string | undefined;
-  const contentType = event.headers["content-type"] || "";
+  const contentType = getHeader(event.headers || {}, "content-type");
 
   if (contentType.includes("application/json")) {
     try {
@@ -58,6 +63,8 @@ const handler: Handler = async (event: HandlerEvent) => {
   email = email.toLowerCase().trim();
 
   try {
+    const db = getDbClient();
+
     // Check if already subscribed
     const existing = await db.execute({
       sql: "SELECT id, unsubscribed_at FROM subscribers WHERE email = ?",

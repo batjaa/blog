@@ -1,6 +1,6 @@
 /resources
 
-.netlify/state.json
+.netlify
 
 *.sublime-*
 *.code-*

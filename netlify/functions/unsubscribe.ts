@@ -1,10 +1,15 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
-import { createClient } from "@libsql/client";
+import { getDbClient } from "./db";
 
-const db = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN,
-});
+function getHeader(headers: Record<string, string | undefined>, name: string) {
+  const target = name.toLowerCase();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() === target) {
+      return value || "";
+    }
+  }
+  return "";
+}
 
 const handler: Handler = async (event: HandlerEvent) => {
   // Allow GET (for email link clicks) and POST
@@ -23,7 +28,7 @@ const handler: Handler = async (event: HandlerEvent) => {
     const params = new URLSearchParams(event.rawQuery || "");
     email = params.get("email") || undefined;
   } else {
-    const contentType = event.headers["content-type"] || "";
+    const contentType = getHeader(event.headers || {}, "content-type");
     if (contentType.includes("application/json")) {
       try {
         const body = JSON.parse(event.body || "{}");
@@ -60,6 +65,8 @@ const handler: Handler = async (event: HandlerEvent) => {
   email = email.toLowerCase().trim();
 
   try {
+    const db = getDbClient();
+
     const result = await db.execute({
       sql: "UPDATE subscribers SET unsubscribed_at = CURRENT_TIMESTAMP WHERE email = ? AND unsubscribed_at IS NULL",
       args: [email],
@@ -99,6 +106,8 @@ const handler: Handler = async (event: HandlerEvent) => {
     };
   } catch (error) {
     console.error("Unsubscribe error:", error);
+    const missingConfig =
+      error instanceof Error && error.message.includes("TURSO_DATABASE_URL");
 
     if (event.httpMethod === "GET") {
       return {
@@ -109,7 +118,9 @@ const handler: Handler = async (event: HandlerEvent) => {
 <head><title>Error</title></head>
 <body style="font-family: system-ui, sans-serif; max-width: 400px; margin: 50px auto; text-align: center;">
   <h2>Something went wrong</h2>
-  <p>Please try again later or contact us directly.</p>
+  <p>${missingConfig
+    ? "Newsletter subscription service is temporarily unavailable."
+    : "Please try again later or contact us directly."}</p>
 </body>
 </html>`,
       };

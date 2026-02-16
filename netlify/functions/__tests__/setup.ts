@@ -9,6 +9,9 @@ vi.mock("@libsql/client", () => ({
   }),
 }));
 
+process.env.TURSO_DATABASE_URL = "libsql://test-db.turso.io";
+process.env.TURSO_AUTH_TOKEN = "test-token";
+
 // Helper to create mock Netlify events
 export function createMockEvent(overrides: {
   httpMethod?: string;
