@@ -7,6 +7,7 @@ on:
     paths:
       - 'newsletter/issues/**'
       - 'newsletter/templates/**'
+      - 'newsletter/scripts/**'
 
   # Manual trigger for sending
   workflow_dispatch:
@@ -94,6 +95,9 @@ jobs:
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           TEST_EMAIL_ADDRESS: ${{ secrets.TEST_EMAIL_ADDRESS }}
+          NEWSLETTER_TOKEN_SECRET: ${{ secrets.NEWSLETTER_TOKEN_SECRET }}
+          NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
+          SITE_URL: https://batjaa.com
 
       - name: Send to all subscribers
         if: github.event.inputs.action == 'send-broadcast'
@@ -103,6 +107,8 @@ jobs:
           NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          NEWSLETTER_TOKEN_SECRET: ${{ secrets.NEWSLETTER_TOKEN_SECRET }}
+          SITE_URL: https://batjaa.com
 
       - name: Send Summary
         run: |
