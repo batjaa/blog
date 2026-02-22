@@ -45,14 +45,9 @@ if (fs.existsSync(filePath)) {
 const template = `---
 title: "${monthName} ${year}"
 date: ${year}-${month}-01
+active: false
 # featured_image: https://your-cdn.com/path/to/hero.jpg
 # greeting: "Hey everyone!"
-
-# trading:
-#   pnl: "+$0"
-#   sentiment: neutral  # positive | negative | neutral
-#   chart: https://your-cdn.com/path/to/chart.png
-#   summary: "Brief trading summary..."
 
 # movies:
 #   - url: https://www.imdb.com/title/tt1234567/

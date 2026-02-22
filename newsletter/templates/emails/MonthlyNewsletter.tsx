@@ -106,7 +106,7 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
   const professionalContent = props.professionalContent ?? previewProps.professionalContent;
   const healthContent = props.healthContent;
   const travelContent = props.travelContent;
-  const trading = props.trading ?? previewProps.trading;
+  const trading = props.trading;
   const movies = props.movies ?? previewProps.movies;
   const spotifyPlaylistUrl = props.spotifyPlaylistUrl ?? previewProps.spotifyPlaylistUrl;
   const spotifyPlaylistName = props.spotifyPlaylistName ?? previewProps.spotifyPlaylistName;
@@ -150,15 +150,13 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       )}
 
       {/* Trading Section */}
-      {trading ? (
+      {trading && (
         <TradingCard
           pnl={trading.pnl}
           sentiment={trading.sentiment}
           chartUrl={trading.chartUrl}
           summary={trading.summary}
         />
-      ) : (
-        <PlaceholderSection title="Trading Update" />
       )}
 
       {/* Consumption Grid (Movies & Music) */}
