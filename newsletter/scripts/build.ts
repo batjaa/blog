@@ -37,6 +37,7 @@ interface TradingFrontmatter {
 interface IssueFrontmatter {
   title: string;
   date: string;
+  active?: boolean;
   featured_image?: string;
   greeting?: string;
   trading?: TradingFrontmatter;
@@ -211,27 +212,41 @@ async function buildIssue(filename: string): Promise<void> {
   console.log(`  ✓ Written to: ${distPath}`);
 
   // Write to Hugo content directory (for web archive)
-  // Create a Hugo-compatible HTML file with frontmatter
-  // Format date as YYYY-MM-DD for Hugo
-  const dateObj = new Date(frontmatter.date);
-  const hugoDate = dateObj.toISOString().split("T")[0];
+  const active = frontmatter.active !== false;
 
-  // Escape {{ and }} for Hugo — it interprets these as Go template syntax
-  const hugoSafeHtml = html
-    .replace(/{{/g, '{ {')
-    .replace(/}}/g, '} }');
+  if (!active) {
+    // Remove any existing Hugo file for inactive issues
+    const hugoPath = path.join(HUGO_NEWSLETTER_DIR, `${slug}.html`);
+    if (fs.existsSync(hugoPath)) {
+      fs.unlinkSync(hugoPath);
+      console.log(`  ✓ Removed inactive Hugo page: ${hugoPath}`);
+    } else {
+      console.log(`  ⏭ Skipped Hugo page (inactive)`);
+    }
+  } else {
+    // Create a Hugo-compatible HTML file with frontmatter
+    // Format date as YYYY-MM-DD for Hugo
+    const dateObj = new Date(frontmatter.date);
+    const hugoDate = dateObj.toISOString().split("T")[0];
 
-  const hugoContent = `---
+    // Escape {{ and }} for Hugo — it interprets these as Go template syntax
+    const hugoSafeHtml = html
+      .replace(/{{/g, '{ {')
+      .replace(/}}/g, '} }');
+
+    const hugoContent = `---
 title: "${frontmatter.title}"
 date: ${hugoDate}
 type: newsletter
 layout: single
+active: ${active}
 ---
 ${hugoSafeHtml}`;
 
-  const hugoPath = path.join(HUGO_NEWSLETTER_DIR, `${slug}.html`);
-  fs.writeFileSync(hugoPath, hugoContent);
-  console.log(`  ✓ Written to: ${hugoPath}`);
+    const hugoPath = path.join(HUGO_NEWSLETTER_DIR, `${slug}.html`);
+    fs.writeFileSync(hugoPath, hugoContent);
+    console.log(`  ✓ Written to: ${hugoPath}`);
+  }
 }
 
 async function main() {
