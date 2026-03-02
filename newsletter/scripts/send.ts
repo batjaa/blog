@@ -65,7 +65,7 @@ function buildSubject(issueSlug: string): string {
   const [year, month] = issueSlug.split("-");
   const date = new Date(parseInt(year), parseInt(month) - 1);
   const formatted = date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-  return `The Batjaa Dispatch — ${formatted}`;
+  return `A letter from Batjaa — ${formatted}`;
 }
 
 async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void> {
