@@ -61,10 +61,11 @@ async function getSubscribers(): Promise<string[]> {
   return result.rows.map((row) => row.email as string);
 }
 
-function extractTitle(html: string): string {
-  // Extract title from the newsletter HTML
-  const match = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
-  return match ? match[1].trim() : "Monthly Update";
+function buildSubject(issueSlug: string): string {
+  const [year, month] = issueSlug.split("-");
+  const date = new Date(parseInt(year), parseInt(month) - 1);
+  const formatted = date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return `The Batjaa Dispatch — ${formatted}`;
 }
 
 async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void> {
@@ -86,7 +87,7 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
   }
 
   const html = fs.readFileSync(htmlPath, "utf-8");
-  const title = extractTitle(html);
+  const subject = buildSubject(issueSlug);
   const client = new ServerClient(apiKey);
 
   if (isTest) {
@@ -96,7 +97,7 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
     await client.sendEmail({
       From: fromEmail,
       To: testEmail!,
-      Subject: `[TEST] ${title}`,
+      Subject: `[TEST] ${subject}`,
       HtmlBody: testHtml,
       MessageStream: "outbound",
       TrackOpens: true,
@@ -113,7 +114,7 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
     }
 
     console.log(`📧 Broadcasting to ${subscribers.length} subscribers...`);
-    console.log(`   Subject: ${title}`);
+    console.log(`   Subject: ${subject}`);
     console.log("");
 
     const results: SendResult = { successful: [], failed: [] };
@@ -128,7 +129,7 @@ async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void>
         return {
           From: fromEmail,
           To: email,
-          Subject: title,
+          Subject: subject,
           HtmlBody: htmlBody,
           MessageStream: "broadcast" as const,
           TrackOpens: true,
