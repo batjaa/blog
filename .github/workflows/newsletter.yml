@@ -21,6 +21,10 @@ on:
           - send-test
           - send-broadcast
         default: 'build-only'
+      issue:
+        description: 'Issue to send (e.g. 2026-03). Defaults to latest built issue.'
+        required: false
+        type: string
 
 jobs:
   build:
@@ -91,7 +95,7 @@ jobs:
 
       - name: Send test email
         if: github.event.inputs.action == 'send-test'
-        run: npm run newsletter:send:test
+        run: npm run newsletter:send:test ${{ github.event.inputs.issue && format('-- --issue={0}', github.event.inputs.issue) || '' }}
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           TEST_EMAIL_ADDRESS: ${{ secrets.TEST_EMAIL_ADDRESS }}
@@ -101,7 +105,7 @@ jobs:
 
       - name: Send to all subscribers
         if: github.event.inputs.action == 'send-broadcast'
-        run: npm run newsletter:send:broadcast
+        run: npm run newsletter:send:broadcast ${{ github.event.inputs.issue && format('-- --issue={0}', github.event.inputs.issue) || '' }}
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
