@@ -207,3 +207,9 @@ staticDir = "static"
   icon = "fa-youtube"
   hover = "&#xf167;"
   weight = 19
+[[params.social]]
+  url = "https://buymeacoffee.com/batjaa"
+  name = "buymeacoffee"
+  icon = "fa-coffee"
+  hover = "&#xf0f4;"
+  weight = 20
