@@ -1092,6 +1092,9 @@ nav ul.menu.nav li i.fa {
   /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff6284c5, endColorstr=#ffa971ae, GradientType=0);
   /* IE6-9 */
+  background-image: url('/images/avatar.jpg');
+  background-size: cover;
+  background-position: center center;
 }
 .section-container-wrapper .section-container section#welcome:not(.fixed) + section,
 .section-container-wrapper .section-container section#welcome.fixed + .dummy + section {
