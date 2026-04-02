@@ -92,7 +92,7 @@ async function markdownToHtml(md: string): Promise<string> {
     .replace(/<ul>/g, '<ul style="margin: 0 0 16px 0; padding-left: 24px;">')
     .replace(/<li>/g, '<li style="margin: 0 0 8px 0;">')
     .replace(/<strong>/g, '<strong style="font-weight: 600; color: #1e293b;">')
-    .replace(/<a /g, '<a style="color: #2563eb; text-decoration: underline;" ');
+    .replace(/<a /g, '<a target="_blank" style="color: #2563eb; text-decoration: underline;" ');
 }
 
 // Fetch movie metadata from OMDB API
