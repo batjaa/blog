@@ -34,6 +34,13 @@ interface TradingFrontmatter {
   summary?: string;
 }
 
+interface ProjectFrontmatter {
+  name: string;
+  url: string;
+  description: string;
+  image_url?: string;
+}
+
 interface IssueFrontmatter {
   title: string;
   date: string;
@@ -45,6 +52,8 @@ interface IssueFrontmatter {
   spotify_playlist_url?: string;
   spotify_playlist_name?: string;
   books?: BookFrontmatter[];
+  projects?: ProjectFrontmatter[];
+  music_note?: string;
 }
 
 // Extract content between ## headers
@@ -179,6 +188,14 @@ async function buildIssue(filename: string): Promise<void> {
     link: book.link,
   }));
 
+  // Prepare projects data
+  const projects = (frontmatter.projects || []).map((proj) => ({
+    name: proj.name,
+    url: proj.url,
+    description: proj.description,
+    imageUrl: proj.image_url,
+  }));
+
   // Build props for the email component
   const props = {
     title: frontmatter.title,
@@ -193,7 +210,9 @@ async function buildIssue(filename: string): Promise<void> {
     movies: enrichedMovies,
     spotifyPlaylistUrl: frontmatter.spotify_playlist_url,
     spotifyPlaylistName: frontmatter.spotify_playlist_name,
+    musicNote: frontmatter.music_note,
     books,
+    projects,
   };
 
   // Render to HTML

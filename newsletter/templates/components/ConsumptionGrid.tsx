@@ -14,12 +14,14 @@ interface ConsumptionGridProps {
   movies?: Movie[];
   spotifyPlaylistUrl?: string;
   spotifyPlaylistName?: string;
+  musicNote?: string;
 }
 
 export const ConsumptionGrid = ({
   movies = [],
   spotifyPlaylistUrl,
   spotifyPlaylistName,
+  musicNote,
 }: ConsumptionGridProps) => {
   if (movies.length === 0 && !spotifyPlaylistUrl) {
     return null;
@@ -58,6 +60,10 @@ export const ConsumptionGrid = ({
             </Column>
           </Row>
         </Section>
+      )}
+
+      {musicNote && (
+        <Text style={musicNoteText}>{musicNote}</Text>
       )}
     </Section>
   );
@@ -162,6 +168,13 @@ const movieComment: React.CSSProperties = {
   color: "#4b5563",
   lineHeight: "21px",
   margin: 0,
+};
+
+const musicNoteText: React.CSSProperties = {
+  fontSize: "15px",
+  color: "#374151",
+  lineHeight: "24px",
+  margin: "0 0 16px 0",
 };
 
 const spotifySection: React.CSSProperties = {

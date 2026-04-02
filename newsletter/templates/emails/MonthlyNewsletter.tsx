@@ -9,6 +9,7 @@ import {
   TradingCard,
   ConsumptionGrid,
   BooksSection,
+  ProjectsGrid,
 } from "../components";
 
 interface Movie {
@@ -36,6 +37,13 @@ interface Trading {
   summary?: string;
 }
 
+interface Project {
+  name: string;
+  url: string;
+  description: string;
+  imageUrl?: string;
+}
+
 interface NewsletterProps {
   title: string;
   date: string;
@@ -53,7 +61,9 @@ interface NewsletterProps {
   movies?: Movie[];
   spotifyPlaylistUrl?: string;
   spotifyPlaylistName?: string;
+  musicNote?: string;
   books?: Book[];
+  projects?: Project[];
 }
 
 const formatDate = (dateStr: string): string => {
@@ -107,10 +117,12 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
   const healthContent = props.healthContent;
   const travelContent = props.travelContent;
   const trading = props.trading;
-  const movies = props.movies ?? previewProps.movies;
+  const movies = props.movies ?? previewProps.movies ?? [];
   const spotifyPlaylistUrl = props.spotifyPlaylistUrl ?? previewProps.spotifyPlaylistUrl;
   const spotifyPlaylistName = props.spotifyPlaylistName ?? previewProps.spotifyPlaylistName;
-  const books = props.books ?? previewProps.books;
+  const musicNote = props.musicNote;
+  const books = props.books ?? previewProps.books ?? [];
+  const projects = props.projects ?? [];
 
   const formattedDate = formatDate(date!);
   const previewText = `${title} - Updates from the Batjaa family`;
@@ -144,6 +156,7 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       {professionalContent ? (
         <ContentSection title="Professional">
           <div dangerouslySetInnerHTML={{ __html: professionalContent }} />
+          {projects.length > 0 && <ProjectsGrid projects={projects} />}
         </ContentSection>
       ) : (
         <PlaceholderSection title="Professional" />
@@ -160,16 +173,17 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       )}
 
       {/* Consumption Grid (Movies & Music) */}
-      {((movies ?? []).length > 0 || spotifyPlaylistUrl) && (
+      {(movies.length > 0 || spotifyPlaylistUrl || musicNote) && (
         <ConsumptionGrid
-          movies={movies ?? []}
+          movies={movies}
           spotifyPlaylistUrl={spotifyPlaylistUrl}
           spotifyPlaylistName={spotifyPlaylistName}
+          musicNote={musicNote}
         />
       )}
 
       {/* Books Section */}
-      {(books ?? []).length > 0 && <BooksSection books={books ?? []} />}
+      {books.length > 0 && <BooksSection books={books} />}
 
       {/* Health Section */}
       {healthContent ? (
