@@ -10,8 +10,15 @@ interface Movie {
   imdbUrl: string;
 }
 
+interface Song {
+  title: string;
+  url: string;
+  comment?: string;
+}
+
 interface ConsumptionGridProps {
   movies?: Movie[];
+  songs?: Song[];
   spotifyPlaylistUrl?: string;
   spotifyPlaylistName?: string;
   musicNote?: string;
@@ -19,11 +26,12 @@ interface ConsumptionGridProps {
 
 export const ConsumptionGrid = ({
   movies = [],
+  songs = [],
   spotifyPlaylistUrl,
   spotifyPlaylistName,
   musicNote,
 }: ConsumptionGridProps) => {
-  if (movies.length === 0 && !spotifyPlaylistUrl) {
+  if (movies.length === 0 && songs.length === 0 && !spotifyPlaylistUrl && !musicNote) {
     return null;
   }
 
@@ -37,6 +45,19 @@ export const ConsumptionGrid = ({
         <Section style={moviesSection}>
           {movies.map((movie, index) => (
             <MovieCard key={index} movie={movie} />
+          ))}
+        </Section>
+      )}
+
+      {songs.length > 0 && (
+        <Section style={songsSection}>
+          {songs.map((song, index) => (
+            <Section key={index} style={songRow}>
+              <Link href={song.url} style={songLink}>
+                <span style={songNote}>♪</span> {song.title}
+              </Link>
+              {song.comment && <Text style={songComment}>{song.comment}</Text>}
+            </Section>
           ))}
         </Section>
       )}
@@ -168,6 +189,33 @@ const movieComment: React.CSSProperties = {
   color: "#4b5563",
   lineHeight: "21px",
   margin: 0,
+};
+
+const songsSection: React.CSSProperties = {
+  marginBottom: "24px",
+};
+
+const songRow: React.CSSProperties = {
+  marginBottom: "14px",
+};
+
+const songLink: React.CSSProperties = {
+  fontSize: "16px",
+  fontWeight: "600",
+  color: "#1e293b",
+  textDecoration: "none",
+  display: "block",
+};
+
+const songNote: React.CSSProperties = {
+  color: "#059669",
+};
+
+const songComment: React.CSSProperties = {
+  fontSize: "14px",
+  color: "#4b5563",
+  lineHeight: "21px",
+  margin: "2px 0 0 0",
 };
 
 const musicNoteText: React.CSSProperties = {

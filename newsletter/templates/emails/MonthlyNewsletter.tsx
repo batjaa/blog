@@ -44,6 +44,12 @@ interface Project {
   imageUrl?: string;
 }
 
+interface Song {
+  title: string;
+  url: string;
+  comment?: string;
+}
+
 interface NewsletterProps {
   title: string;
   date: string;
@@ -59,6 +65,7 @@ interface NewsletterProps {
   // Structured data
   trading?: Trading;
   movies?: Movie[];
+  songs?: Song[];
   spotifyPlaylistUrl?: string;
   spotifyPlaylistName?: string;
   musicNote?: string;
@@ -118,8 +125,9 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
   const travelContent = props.travelContent;
   const trading = props.trading;
   const movies = props.movies ?? previewProps.movies ?? [];
-  const spotifyPlaylistUrl = props.spotifyPlaylistUrl ?? previewProps.spotifyPlaylistUrl;
-  const spotifyPlaylistName = props.spotifyPlaylistName ?? previewProps.spotifyPlaylistName;
+  const songs = props.songs ?? [];
+  const spotifyPlaylistUrl = props.spotifyPlaylistUrl;
+  const spotifyPlaylistName = props.spotifyPlaylistName;
   const musicNote = props.musicNote;
   const books = props.books ?? previewProps.books ?? [];
   const projects = props.projects ?? [];
@@ -173,9 +181,10 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       )}
 
       {/* Consumption Grid (Movies & Music) */}
-      {(movies.length > 0 || spotifyPlaylistUrl || musicNote) && (
+      {(movies.length > 0 || songs.length > 0 || spotifyPlaylistUrl || musicNote) && (
         <ConsumptionGrid
           movies={movies}
+          songs={songs}
           spotifyPlaylistUrl={spotifyPlaylistUrl}
           spotifyPlaylistName={spotifyPlaylistName}
           musicNote={musicNote}

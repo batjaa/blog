@@ -41,6 +41,12 @@ interface ProjectFrontmatter {
   image_url?: string;
 }
 
+interface SongFrontmatter {
+  title: string;
+  url: string;
+  comment?: string;
+}
+
 interface IssueFrontmatter {
   title: string;
   date: string;
@@ -49,6 +55,7 @@ interface IssueFrontmatter {
   greeting?: string;
   trading?: TradingFrontmatter;
   movies?: MovieFrontmatter[];
+  songs?: SongFrontmatter[];
   spotify_playlist_url?: string;
   spotify_playlist_name?: string;
   books?: BookFrontmatter[];
@@ -208,6 +215,7 @@ async function buildIssue(filename: string): Promise<void> {
     travelContent: travelHtml || undefined,
     trading,
     movies: enrichedMovies,
+    songs: frontmatter.songs || [],
     spotifyPlaylistUrl: frontmatter.spotify_playlist_url,
     spotifyPlaylistName: frontmatter.spotify_playlist_name,
     musicNote: frontmatter.music_note,
