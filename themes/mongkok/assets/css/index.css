@@ -1622,8 +1622,216 @@ nav ul.menu.nav li i.fa {
   font-size: 12px;
   font-weight: 700;
 }
+.theme-vote-widget {
+  position: relative;
+  z-index: 2600;
+}
+.theme-vote-opener {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 2601;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: #000;
+  color: #fff;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  font-family: "Roboto Condensed", Sans-Serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  line-height: 44px;
+}
+.theme-vote-opener:hover,
+.theme-vote-opener:focus {
+  background: #6284c5;
+  outline: none;
+}
+.theme-vote-widget.is-open .theme-vote-opener {
+  opacity: 0;
+  pointer-events: none;
+}
+.theme-vote-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+.theme-vote-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.theme-vote-panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1120px;
+  max-height: 86vh;
+  overflow: auto;
+  background: #fff;
+  color: #666;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  padding: 16px;
+  transform: translateY(14px);
+  transition: transform 0.18s ease;
+}
+.theme-vote-overlay.is-open .theme-vote-panel {
+  transform: translateY(0);
+}
+.theme-vote-panel:focus {
+  outline: none;
+}
+.theme-vote-panel * {
+  box-sizing: border-box;
+}
+.theme-vote-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.theme-vote-kicker {
+  margin: 0 0 4px;
+  font-family: "Roboto Condensed", Sans-Serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  color: #6284c5;
+}
+.theme-vote-header h2 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: "Roboto Condensed", Sans-Serif;
+  font-weight: 700;
+  color: #000;
+  font-size: 28px;
+  line-height: 32px;
+}
+.theme-vote-close {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  color: #000;
+  line-height: 36px;
+  text-align: center;
+}
+.theme-vote-close:hover,
+.theme-vote-close:focus {
+  border-color: #6284c5;
+  color: #6284c5;
+  outline: none;
+}
+.theme-vote-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.theme-vote-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.theme-vote-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  background: #f2f2f2;
+}
+.theme-vote-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 13px;
+}
+.theme-vote-card h3 {
+  margin: 0;
+  font-family: "Roboto Condensed", Sans-Serif;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000;
+}
+.theme-vote-actions {
+  display: inline-flex;
+  gap: 8px;
+  max-width: 100%;
+}
+.theme-vote-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 50px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #f7f7f7;
+  color: #666;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 36px;
+}
+.theme-vote-actions button:hover,
+.theme-vote-actions button:focus {
+  border-color: #6284c5;
+  color: #6284c5;
+  outline: none;
+}
+.theme-vote-actions button[aria-pressed="true"] {
+  border-color: #6284c5;
+  background: #6284c5;
+  color: #fff;
+}
+.theme-vote-actions button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.theme-vote-status {
+  min-height: 20px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+.theme-vote-status.is-error {
+  color: #b3261e;
+}
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
+  .theme-vote-overlay {
+    padding: 18px;
+  }
+  .theme-vote-panel {
+    padding: 22px;
+  }
+  .theme-vote-actions button {
+    min-width: 58px;
+    padding: 0 10px;
+  }
+  .theme-vote-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .nav-toggle {
     width: 40px;
     top: 50px;

@@ -14,3 +14,6 @@
 
 {{ $config := resources.Get "js/config.js" | resources.ExecuteAsTemplate "js/config.js" . }}
 <script data-main="{{ $config.RelPermalink }}" src="/js/require.js"></script>
+
+{{ $themeVote := resources.Get "js/theme-vote.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $themeVote.RelPermalink }}"></script>

@@ -1,0 +1,75 @@
+<div class="theme-vote-widget" data-theme-vote-widget>
+  <button class="theme-vote-opener" type="button" data-theme-vote-open aria-haspopup="dialog" aria-controls="theme-vote-panel">
+    <i class="fa fa-paint-brush" aria-hidden="true"></i>
+    <span>Theme vote</span>
+  </button>
+
+  <div class="theme-vote-overlay" data-theme-vote-overlay hidden>
+    <section class="theme-vote-panel" id="theme-vote-panel" role="dialog" aria-modal="true" aria-labelledby="theme-vote-title" tabindex="-1">
+      <div class="theme-vote-header">
+        <div>
+          <p class="theme-vote-kicker">Site refresh</p>
+          <h2 id="theme-vote-title">Choose the next look</h2>
+        </div>
+        <button class="theme-vote-close" type="button" data-theme-vote-close aria-label="Close theme vote">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="theme-vote-options" data-theme-vote-options>
+        <article class="theme-vote-card" data-theme-id="current">
+          <img src="/images/theme-votes/current.png" alt="Current blog theme home page" loading="lazy">
+          <div class="theme-vote-card-body">
+            <h3>Current</h3>
+            <div class="theme-vote-actions" aria-label="Vote for current theme">
+              <button type="button" data-theme-vote-action="1" aria-label="Upvote current theme" aria-pressed="false">
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                <span data-theme-vote-up>0</span>
+              </button>
+              <button type="button" data-theme-vote-action="-1" aria-label="Downvote current theme" aria-pressed="false">
+                <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                <span data-theme-vote-down>0</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="theme-vote-card" data-theme-id="bento">
+          <img src="/images/theme-votes/bento.png" alt="Bento blog theme home page" loading="lazy">
+          <div class="theme-vote-card-body">
+            <h3>Bento</h3>
+            <div class="theme-vote-actions" aria-label="Vote for bento theme">
+              <button type="button" data-theme-vote-action="1" aria-label="Upvote bento theme" aria-pressed="false">
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                <span data-theme-vote-up>0</span>
+              </button>
+              <button type="button" data-theme-vote-action="-1" aria-label="Downvote bento theme" aria-pressed="false">
+                <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                <span data-theme-vote-down>0</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="theme-vote-card" data-theme-id="tui">
+          <img src="/images/theme-votes/tui.png" alt="TUI blog theme home page" loading="lazy">
+          <div class="theme-vote-card-body">
+            <h3>TUI</h3>
+            <div class="theme-vote-actions" aria-label="Vote for TUI theme">
+              <button type="button" data-theme-vote-action="1" aria-label="Upvote TUI theme" aria-pressed="false">
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                <span data-theme-vote-up>0</span>
+              </button>
+              <button type="button" data-theme-vote-action="-1" aria-label="Downvote TUI theme" aria-pressed="false">
+                <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                <span data-theme-vote-down>0</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <p class="theme-vote-status" data-theme-vote-status role="status" aria-live="polite"></p>
+    </section>
+  </div>
+</div>

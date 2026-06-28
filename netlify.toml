@@ -32,3 +32,8 @@
   from = "/api/test"
   to = "/.netlify/functions/test"
   status = 200
+
+[[redirects]]
+  from = "/api/theme-votes"
+  to = "/.netlify/functions/theme-votes"
+  status = 200
