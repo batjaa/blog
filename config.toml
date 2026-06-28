@@ -54,6 +54,14 @@ staticDir = "static"
       unsafe = true
 
 [security]
+  allowContent = [
+    '^text/asciidoc$',
+    '^text/html$',
+    '^text/markdown$',
+    '^text/org$',
+    '^text/pandoc$',
+    '^text/rst$',
+  ]
   [security.funcs]
     getenv = ['^HUGO_', '^CI$', '^GOOGLE_MAPS_API_TOKEN$']
 
