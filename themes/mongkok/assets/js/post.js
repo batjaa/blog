@@ -2,7 +2,7 @@ window.postLoad = function() {
 
   var primaryColor = $.Color($('.nav-toggle').css('background-color'));
 
-  {{ range last 1 .Site.Data.map.places }}
+  {{ range last 1 hugo.Data.map.places }}
     const googleMapsSettings = {
       styled: true,
       latitude: {{.lat}},

@@ -1,6 +1,9 @@
 [build]
   functions = "netlify/functions"
 
+[build.environment]
+  HUGO_VERSION = "0.163.3"
+
 [functions]
   node_bundler = "esbuild"
 

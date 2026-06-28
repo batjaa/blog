@@ -158,8 +158,8 @@
 }
 
 .nav-tabs{
-	.uppercase;
-	.title-font;
+	.uppercase();
+	.title-font();
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
@@ -382,8 +382,8 @@ img{
 }
 
 figcaption{
-	.title-font;
-	.title-text-color;
+	.title-font();
+	.title-text-color();
 	font-size: 12px;
 	line-height: 20px;
 	padding: 5px 0 10px;
@@ -439,11 +439,11 @@ a:hover, a:active, a:focus{
 }
 
 .title-style{
-	.uppercase;
-	.letter-spacing;
-	.title-font;
-	.title-font-weight;
-	.title-text-color;
+	.uppercase();
+	.letter-spacing();
+	.title-font();
+	.title-font-weight();
+	.title-text-color();
 }
 
 .footnote-size{
@@ -452,7 +452,7 @@ a:hover, a:active, a:focus{
 
 .tag{
 	text-align: center;
-	padding: 0 @bodyLineHeight/2;
+	padding: 0 (@bodyLineHeight / 2);
 	color: #fff;
 	border-radius: @bodyLineHeight;
 	line-height: @bodyLineHeight;
@@ -503,7 +503,7 @@ p.drop-cap:first-letter{
 }
 
 dt{
-	.title-style;
+	.title-style();
 }
 
 dt, dd{
@@ -531,14 +531,14 @@ blockquote{
 
 	footer{
 		margin-top: 25px;
-		.title-style;
+		.title-style();
 		font-style: normal;
 		text-align: right;
 	}
 }
 
 .table>thead>tr>th{
-	.title-style;
+	.title-style();
 	border-bottom-color: @bodyTextColor;
 }
 
@@ -562,8 +562,8 @@ blockquote{
 			background-color: @cssBookFlatCaptionBgColor;
 			opacity: 0;
 			padding: 10px;
-			.uppercase;
-			.letter-spacing;
+			.uppercase();
+			.letter-spacing();
 
 			.transition(~'all @{transitionDuration} ease');
 
@@ -760,22 +760,22 @@ blockquote{
 		left: 0;
 		width: 0;
 		height: 0;
-		border-left: @navToggleWidth/2 solid transparent;
-		border-right: @navToggleWidth/2 solid transparent;
-		border-bottom: @navToggleWidth/2 solid @bgColor;
+		border-left: (@navToggleWidth / 2) solid transparent;
+		border-right: (@navToggleWidth / 2) solid transparent;
+		border-bottom: (@navToggleWidth / 2) solid @bgColor;
 	}
 
 	&:before{
 		content: '';
 		position: absolute;
 		display: none;
-		bottom: -@navToggleWidth/2+5;
+		bottom: -(@navToggleWidth / 2) + 5;
 		left: 0;
 		width: 0;
 		height: 0;
-		border-top: @navToggleWidth/2-5 solid @navToggleBgColor;
-		border-left: @navToggleWidth/2 solid transparent;
-		border-right: @navToggleWidth/2 solid transparent;
+		border-top: (@navToggleWidth / 2) - 5 solid @navToggleBgColor;
+		border-left: (@navToggleWidth / 2) solid transparent;
+		border-right: (@navToggleWidth / 2) solid transparent;
 	}
 }
 
@@ -861,7 +861,7 @@ nav{
 		h2{
 			margin: 40px 0 20px;
 			color: @navTextColor;
-			.uppercase;
+			.uppercase();
 		}
 	}
 
@@ -887,7 +887,7 @@ nav{
 
 		li{
 			font-size: 12px;
-			.uppercase;
+			.uppercase();
 			padding: 0;
 			margin: 11px;
 			display: inline-block;
@@ -1012,7 +1012,7 @@ nav{
 			}
 
 			.h2-style{
-				.title-style;
+				.title-style();
 				position: relative;
 				font-size: 36px;
 				line-height: 40px;
@@ -1283,7 +1283,7 @@ nav{
 						max-width: @welcomeContentMaxWidth;
 
 						h1{
-							.uppercase;
+							.uppercase();
 							letter-spacing: 0;
 							margin-top: 0;
 							margin-bottom: 0;
@@ -1399,9 +1399,9 @@ nav{
 							display: block;
 							margin: 5px;
 							color: #666;
-							.uppercase;
-							.letter-spacing;
-							.title-font;
+							.uppercase();
+							.letter-spacing();
+							.title-font();
 						}
 
 						a:hover, a:active, a.current{
@@ -1451,7 +1451,7 @@ nav{
 								h3{
 									margin: 0 0 10px;
 									line-height: 20px;
-									.title-style;
+									.title-style();
 									font-size: 14px;
 									color: @portfolioItemListTitleTextColor;
 									&:after{
@@ -1471,7 +1471,7 @@ nav{
 									background-color: @portfolioItemListViewButtonBgColor;
 									padding: 5px 15px;
 									display: inline-block;
-									.uppercase;
+									.uppercase();
 									font-size: 12px;
 								}
 							}
@@ -1495,7 +1495,7 @@ nav{
 
 					.portfolio-nav, .portfolio-back-to-top{
 						text-align: center;
-						.uppercase;
+						.uppercase();
 						font-size: 12px;
 
 						a:link, a:visited{
@@ -1542,7 +1542,7 @@ nav{
 						dl{
 							margin-bottom: 0;
 							dt{
-								.title-style;
+								.title-style();
 								color: @primaryColor;
 								margin-bottom: 2px;
 
@@ -1728,30 +1728,30 @@ nav{
 							// http://stackoverflow.com/questions/2610497/change-an-inputs-html5-placeholder-color-with-css
 							&::-webkit-input-placeholder { /* WebKit browsers */
 								color: fadeout(@titleTextColor, 50%);
-								.uppercase;
-								.title-font;
-								.letter-spacing;
+								.uppercase();
+								.title-font();
+								.letter-spacing();
 								font-size: 14px;
 							}
 							&:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
 								color: fadeout(@titleTextColor, 50%);
-								.uppercase;
-								.title-font;
-								.letter-spacing;
+								.uppercase();
+								.title-font();
+								.letter-spacing();
 								font-size: 14px;
 							}
 							&::-moz-placeholder { /* Mozilla Firefox 19+ */
 								color: fadeout(@titleTextColor, 50%);
-								.uppercase;
-								.title-font;
-								.letter-spacing;
+								.uppercase();
+								.title-font();
+								.letter-spacing();
 								font-size: 14px;
 							}
 							&:-ms-input-placeholder { /* Internet Explorer 10+ */
 								color: fadeout(@titleTextColor, 50%);
-								.uppercase;
-								.title-font;
-								.letter-spacing;
+								.uppercase();
+								.title-font();
+								.letter-spacing();
 								font-size: 14px;
 							}
 						}
@@ -1780,7 +1780,7 @@ nav{
 
 			.copyright{
 				// margin-top: 20px;
-				.uppercase;
+				.uppercase();
 				font-size: 12px;
 				font-weight: @titleTextFontWeight;
 			}

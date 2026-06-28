@@ -1,4 +1,4 @@
-languageCode = "en"
+locale = "en"
 title = "Batjaa's corner"
 theme = "mongkok"
 DefaultContentLanguage = "en"
@@ -28,7 +28,7 @@ staticDir = "static"
 [languages]
   [languages.en]
     baseURL = "https://batjaa.com"
-    languageName = "English"
+    label = "English"
     staticDir2 = "static_en"
     title = "Batjaa's corner"
     weight = 1
@@ -37,7 +37,7 @@ staticDir = "static"
 
   [languages.mn]
     baseURL = "https://batjargal.mn"
-    languageName = "Mongolian"
+    label = "Mongolian"
     staticDir3 = "static_mn"
     title = "Батжаагийн булан"
     weight = 2

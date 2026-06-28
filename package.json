@@ -7,8 +7,8 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "css:build": "lessc --math=always themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css",
-    "css:watch": "lessc --math=always themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css --watch",
+    "css:build": "lessc --math=parens-division themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css",
+    "css:watch": "lessc --math=parens-division themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css --watch",
     "dev": "npm run css:build && hugo serve --ignoreCache --forceSyncStatic",
     "build": "npm run css:build && hugo --minify",
     "clean": "rm -rf public",
