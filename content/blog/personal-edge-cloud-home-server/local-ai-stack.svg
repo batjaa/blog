@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Local AI stack</title>
+  <desc id="desc">A user connects to Open WebUI and local models on greymon, which can use home-server tools and private data.</desc>
+  <defs>
+    <style>
+      .bg { fill: #111713; }
+      .panel { fill: #18221d; stroke: #35d07f; stroke-width: 2; }
+      .box { fill: #f2f0e8; stroke: #35d07f; stroke-width: 3; }
+      .dark { fill: #213026; stroke: #35d07f; stroke-width: 3; }
+      .label { fill: #111713; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 22px; font-weight: 700; }
+      .small { fill: #111713; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 15px; }
+      .light { fill: #d8f3dc; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 22px; font-weight: 700; }
+      .muted { fill: #91a99a; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 15px; }
+      .line { fill: none; stroke: #35d07f; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .dash { fill: none; stroke: #f2b84b; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 10 12; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#35d07f" />
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f2b84b" />
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="900" rx="42" />
+  <text class="light" x="56" y="72">$ personal edge ai</text>
+  <text class="muted" x="56" y="103">models are useful when they sit near tools, data, and permissions</text>
+
+  <rect class="box" x="70" y="196" width="220" height="112" rx="24" />
+  <text class="label" x="121" y="244">developer</text>
+  <text class="small" x="111" y="274">browser / terminal</text>
+
+  <rect class="dark" x="418" y="162" width="330" height="182" rx="30" />
+  <text class="light" x="509" y="222">greymon</text>
+  <text class="muted" x="491" y="254">GPU workstation</text>
+  <text class="muted" x="476" y="286">LLMs + image/video</text>
+
+  <rect class="box" x="486" y="420" width="194" height="92" rx="22" />
+  <text class="label" x="519" y="458">Open WebUI</text>
+  <text class="small" x="519" y="484">chat surface</text>
+
+  <rect class="box" x="486" y="560" width="194" height="92" rx="22" />
+  <text class="label" x="542" y="598">Ollama</text>
+  <text class="small" x="524" y="624">local inference</text>
+
+  <rect class="panel" x="842" y="144" width="278" height="170" rx="28" />
+  <text class="light" x="900" y="198">private data</text>
+  <text class="muted" x="884" y="232">Nextcloud, Paperless,</text>
+  <text class="muted" x="884" y="260">Immich, media, notes</text>
+
+  <rect class="panel" x="842" y="376" width="278" height="170" rx="28" />
+  <text class="light" x="907" y="430">home tools</text>
+  <text class="muted" x="892" y="464">Grafana, services,</text>
+  <text class="muted" x="892" y="492">deploys, automations</text>
+
+  <rect class="panel" x="842" y="608" width="278" height="170" rx="28" />
+  <text class="light" x="900" y="662">safe sandbox</text>
+  <text class="muted" x="894" y="696">bounded network,</text>
+  <text class="muted" x="894" y="724">logs, rollback paths</text>
+
+  <path class="line" d="M290 252 H418" marker-end="url(#arrow)" />
+  <path class="line" d="M583 344 V420" marker-end="url(#arrow)" />
+  <path class="line" d="M583 512 V560" marker-end="url(#arrow)" />
+  <path class="dash" d="M680 466 C752 446 784 322 842 250" marker-end="url(#arrowAmber)" />
+  <path class="dash" d="M680 606 C760 592 788 492 842 461" marker-end="url(#arrowAmber)" />
+  <path class="dash" d="M680 606 C752 674 783 692 842 693" marker-end="url(#arrowAmber)" />
+</svg>

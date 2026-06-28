@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Home server network architecture</title>
+  <desc id="desc">Cloudflare and internet traffic route through SWAG to public services, while Pi-hole and Tailscale provide private access to internal services.</desc>
+  <defs>
+    <style>
+      .bg { fill: #111713; }
+      .panel { fill: #18221d; stroke: #35d07f; stroke-width: 2; }
+      .soft { fill: #223128; stroke: #d8f3dc; stroke-opacity: .35; }
+      .node { fill: #f2f0e8; stroke: #35d07f; stroke-width: 3; }
+      .dark-node { fill: #1d2a22; stroke: #35d07f; stroke-width: 3; }
+      .label { fill: #d8f3dc; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 25px; font-weight: 700; }
+      .small { fill: #d8f3dc; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 17px; }
+      .muted { fill: #91a99a; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 15px; }
+      .ink { fill: #111713; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 18px; font-weight: 700; }
+      .line { fill: none; stroke: #35d07f; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .dash { fill: none; stroke: #f2b84b; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 11 12; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#35d07f" />
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f2b84b" />
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="900" rx="44" />
+  <text class="label" x="56" y="72">$ homelab topology</text>
+  <text class="muted" x="56" y="103">public ingress, private DNS, app platform, and local AI</text>
+
+  <rect class="panel" x="48" y="146" width="1104" height="680" rx="34" opacity=".72" />
+  <rect class="soft" x="78" y="352" width="1044" height="430" rx="28" />
+  <text class="small" x="102" y="389">home LAN / 192.168.50.0/24</text>
+
+  <rect class="node" x="95" y="178" width="190" height="86" rx="22" />
+  <text class="ink" x="137" y="216">internet</text>
+  <text class="muted" x="125" y="241" fill="#111713">users + devices</text>
+
+  <rect class="node" x="386" y="178" width="220" height="86" rx="22" />
+  <text class="ink" x="427" y="216">cloudflare</text>
+  <text class="muted" x="423" y="241" fill="#111713">DNS + proxy</text>
+
+  <rect class="dark-node" x="734" y="176" width="250" height="90" rx="22" />
+  <text class="label" x="782" y="216">router</text>
+  <text class="muted" x="781" y="242">edge gateway</text>
+
+  <path class="line" d="M285 221 H386" marker-end="url(#arrow)" />
+  <path class="line" d="M606 221 H734" marker-end="url(#arrow)" />
+
+  <rect class="dark-node" x="126" y="442" width="240" height="145" rx="28" />
+  <text class="label" x="166" y="491">andromon</text>
+  <text class="small" x="166" y="522">SWAG reverse proxy</text>
+  <text class="muted" x="166" y="551">media, storage, ops</text>
+
+  <rect class="dark-node" x="472" y="442" width="240" height="145" rx="28" />
+  <text class="label" x="518" y="491">wormmon</text>
+  <text class="small" x="518" y="522">Coolify host</text>
+  <text class="muted" x="518" y="551">apps + previews</text>
+
+  <rect class="dark-node" x="818" y="442" width="240" height="145" rx="28" />
+  <text class="label" x="866" y="491">greymon</text>
+  <text class="small" x="866" y="522">local AI box</text>
+  <text class="muted" x="866" y="551">LLMs + generation</text>
+
+  <rect class="dark-node" x="300" y="646" width="240" height="104" rx="26" />
+  <text class="label" x="343" y="690">tentomon</text>
+  <text class="small" x="343" y="721">Pi-hole + DDNS + Kuma</text>
+
+  <rect class="soft" x="664" y="646" width="280" height="104" rx="26" />
+  <text class="label" x="714" y="690">tailscale</text>
+  <text class="small" x="714" y="721">private admin network</text>
+
+  <path class="line" d="M859 266 V352 Q859 380 831 380 H246 Q246 380 246 442" marker-end="url(#arrow)" />
+  <path class="line" d="M366 515 H472" marker-end="url(#arrow)" />
+  <path class="dash" d="M944 646 C1026 622 1068 558 1058 493" marker-end="url(#arrowAmber)" />
+  <path class="dash" d="M804 646 C746 620 710 580 690 544" marker-end="url(#arrowAmber)" />
+  <path class="line" d="M420 646 C386 606 334 578 306 565" marker-end="url(#arrow)" />
+
+  <text class="small" x="116" y="622">public: batjaa.site services</text>
+  <text class="small" x="490" y="622">preview: *.preview.batjaa.site</text>
+  <text class="small" x="768" y="622">private: chat, ollama, admin</text>
+</svg>
