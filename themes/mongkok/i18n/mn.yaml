@@ -10,8 +10,10 @@
   translation: "Голч"
 - id: resume_honors
   translation: "Шагнал, урамшуулал"
-- id: portfolio
-  translation: "Хийсэн ажлууд"
+- id: projects
+  translation: "Бүтээлүүд"
+- id: projects_visit
+  translation: "Очиж үзэх"
 - id: blog
   translation: "Нийтлэл"
 - id: gallery
@@ -42,8 +44,8 @@
   translation: "Миний тухай"
 - id: menu_resume
   translation: "Ажлын намтар"
-- id: menu_portfolio
-  translation: "Хийсэн ажлууд"
+- id: menu_projects
+  translation: "Бүтээлүүд"
 - id: menu_blog
   translation: "Блог"
 - id: menu_gallery

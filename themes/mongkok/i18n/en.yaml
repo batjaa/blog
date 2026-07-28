@@ -10,8 +10,10 @@
   translation: "GPA"
 - id: resume_honors
   translation: "Honors and Awards"
-- id: portfolio
-  translation: "Portfolio"
+- id: projects
+  translation: "Projects"
+- id: projects_visit
+  translation: "Visit site"
 - id: blog
   translation: "Blog"
 - id: gallery
@@ -42,8 +44,8 @@
   translation: "About"
 - id: menu_resume
   translation: "Resume"
-- id: menu_portfolio
-  translation: "Portfolio"
+- id: menu_projects
+  translation: "Projects"
 - id: menu_blog
   translation: "Blog"
 - id: menu_gallery
