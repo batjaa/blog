@@ -20,7 +20,6 @@ googleAnalytics = ""
 
 [taxonomies]
   category = "categories"
-  portfolio = "portfolios"
   tag = "tags"
 
 staticDir = "static"
