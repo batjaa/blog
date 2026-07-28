@@ -98,6 +98,7 @@
 @galleryLightBoxHoverIconColor: @bgColor;
 @galleryItemsPerRow: 3;
 @galleryItemPadding: 10px;
+@galleryItemHeight: 420px;
 @galleryDisplayOverlay: block;
 
 
@@ -1584,7 +1585,22 @@ nav{
 					gap: @galleryItemPadding;
 
 					li{
+						position: relative;
 						padding: 0;
+						height: @galleryItemHeight;
+						overflow: hidden;
+						background: #fff;
+
+						&:after{
+							content: '';
+							position: absolute;
+							left: 0;
+							right: 0;
+							bottom: 0;
+							height: 36px;
+							background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+							pointer-events: none;
+						}
 
 						a.lightbox{
 							display: block;

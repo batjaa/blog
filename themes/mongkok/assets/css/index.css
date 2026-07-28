@@ -1443,7 +1443,21 @@ nav ul.menu.nav li i.fa {
   gap: 10px;
 }
 .section-container-wrapper .section-container section#gallery ul.gallery li {
+  position: relative;
   padding: 0;
+  height: 420px;
+  overflow: hidden;
+  background: #fff;
+}
+.section-container-wrapper .section-container section#gallery ul.gallery li:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+  pointer-events: none;
 }
 .section-container-wrapper .section-container section#gallery ul.gallery li a.lightbox {
   display: block;
