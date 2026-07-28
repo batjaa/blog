@@ -104,18 +104,16 @@
       <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
           <h2 class="h2-style">{{ i18n "projects" }}</h2>
-          <div class="row project-card-list">
+          <div class="project-card-list">
             {{ range (where .Site.RegularPages "Section" "projects").ByWeight }}
-              <div class="col-sm-6 col-md-4">
-                <div class="project-card">
-                  <a class="project-card-image" href="{{ .Params.link }}" target="_blank" rel="noopener">
-                    <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
-                  </a>
-                  <div class="project-card-body">
-                    <h3 class="project-card-title">{{ .Title }}</h3>
-                    <p class="project-card-desc">{{ .Description }}</p>
-                    <a class="project-card-link" href="{{ .Params.link }}" target="_blank" rel="noopener">{{ i18n "projects_visit" }} <i class="fa fa-external-link"></i></a>
-                  </div>
+              <div class="project-card">
+                <a class="project-card-image" href="{{ .Params.link }}" target="_blank" rel="noopener">
+                  <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+                </a>
+                <div class="project-card-body">
+                  <h3 class="project-card-title">{{ .Title }}</h3>
+                  <p class="project-card-desc">{{ .Description }}</p>
+                  <a class="project-card-link" href="{{ .Params.link }}" target="_blank" rel="noopener">{{ i18n "projects_visit" }} <i class="fa fa-external-link"></i></a>
                 </div>
               </div>
             {{ end }}
