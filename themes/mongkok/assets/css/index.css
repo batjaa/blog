@@ -1817,6 +1817,67 @@ nav ul.menu.nav li i.fa {
 .theme-vote-status.is-error {
   color: #b3261e;
 }
+.project-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+.project-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-bottom: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  transition: box-shadow 0.5s, transform 0.5s;
+}
+.project-card:hover {
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+.project-card-image {
+  display: block;
+}
+.project-card-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: top center;
+  background: #f2f2f2;
+}
+.project-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 18px 20px 20px;
+}
+.project-card-title {
+  margin: 0 0 8px;
+  font-family: "Roboto Condensed", Sans-Serif;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000;
+}
+.project-card-desc {
+  flex: 1;
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  line-height: 20px;
+}
+.project-card-link:link,
+.project-card-link:visited {
+  font-family: "Roboto Condensed", Sans-Serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  color: #6284c5;
+}
+.project-card-link:hover,
+.project-card-link:active {
+  color: #a971ae;
+  text-decoration: none;
+}
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
   .theme-vote-overlay {
