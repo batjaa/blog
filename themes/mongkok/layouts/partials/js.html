@@ -17,3 +17,6 @@
 
 {{ $themeVote := resources.Get "js/theme-vote.js" | resources.Minify | resources.Fingerprint }}
 <script src="{{ $themeVote.RelPermalink }}"></script>
+
+{{ $projectsScroll := resources.Get "js/projects-scroll.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $projectsScroll.RelPermalink }}"></script>
