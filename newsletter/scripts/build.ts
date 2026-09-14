@@ -6,6 +6,7 @@ import matter from "gray-matter";
 import { marked } from "marked";
 import { MonthlyNewsletter } from "../templates/emails/MonthlyNewsletter";
 import { groupPhotos } from "./photos";
+import { parseIssueFilename } from "./issues";
 
 // Load .env from project root
 config({ path: path.join(__dirname, "../../.env") });
@@ -157,6 +158,7 @@ async function enrichMovies(movies: MovieFrontmatter[]): Promise<any[]> {
 }
 
 async function buildIssue(filename: string): Promise<void> {
+  const issue = parseIssueFilename(filename);
   console.log(`\nBuilding: ${filename}`);
 
   const filepath = path.join(ISSUES_DIR, filename);
@@ -212,6 +214,8 @@ async function buildIssue(filename: string): Promise<void> {
 
   // Build props for the email component
   const props = {
+    language: issue.language,
+    issueSlug: issue.slug,
     title: frontmatter.title,
     date: frontmatter.date,
     featuredImage: frontmatter.featured_image,
@@ -223,6 +227,7 @@ async function buildIssue(filename: string): Promise<void> {
     travelContent: travelHtml || undefined,
     tradingContent: tradingHtml || undefined,
     closingContent: closingHtml || undefined,
+    randomThoughtsContent: await markdownToHtml(sections["random thoughts"] || ""),
     trading,
     movies: enrichedMovies,
     songs: frontmatter.songs || [],
@@ -242,7 +247,7 @@ async function buildIssue(filename: string): Promise<void> {
   fs.mkdirSync(HUGO_NEWSLETTER_DIR, { recursive: true });
 
   // Get slug from filename (e.g., "2026-01.md" -> "2026-01")
-  const slug = path.basename(filename, ".md");
+  const slug = issue.stem;
 
   // Write to dist directory (for email sending)
   const distPath = path.join(DIST_DIR, `${slug}.html`);
@@ -267,13 +272,15 @@ async function buildIssue(filename: string): Promise<void> {
     const dateObj = new Date(frontmatter.date);
     const hugoDate = dateObj.toISOString().split("T")[0];
 
+    const webHtml = await render(MonthlyNewsletter({ ...props, web: true }));
+
     // Escape {{ and }} for Hugo — it interprets these as Go template syntax
-    const hugoSafeHtml = html
+    const hugoSafeHtml = webHtml
       .replace(/{{/g, '{ {')
       .replace(/}}/g, '} }');
 
     const hugoContent = `---
-title: "${frontmatter.title}"
+title: ${JSON.stringify(frontmatter.title)}
 date: ${hugoDate}
 type: newsletter
 layout: single
@@ -282,7 +289,7 @@ active: ${active}
 ${hugoSafeHtml}`;
 
     const hugoPath = path.join(HUGO_NEWSLETTER_DIR, `${slug}.html`);
-    fs.writeFileSync(hugoPath, hugoContent);
+    fs.writeFileSync(hugoPath, hugoContent.replace(/[ \t]+$/gm, ""));
     console.log(`  ✓ Written to: ${hugoPath}`);
   }
 }

@@ -197,6 +197,42 @@ npm run newsletter:build && npm run build
 
 The newsletter will be available at `/newsletter/YYYY-MM/` on the site.
 
+### Mongolian editions
+
+Each issue can have a Mongolian companion: `newsletter/issues/YYYY-MM.mn.md`.
+Keep YAML field names and the `## Family`, `## Professional`, `## Health`, `## Trading`,
+`## Travel`, `## Random Thoughts`, and `## Closing` section keys in English; translate
+values, prose, and image alt text. Keep dates, links, and media URLs aligned with the
+English source. Movie, book, song, and product names may retain their original titles.
+
+`npm run newsletter:build` builds both languages. The `.mn` filename selects Mongolian
+headings, dates, and footer text, writes `newsletter/dist/YYYY-MM.mn.html`, and generates
+`content/newsletter/YYYY-MM.mn.html` for Hugo. The archive appears at
+`https://batjargal.mn/newsletter/`, with links between matching English and Mongolian
+issues. English issues remain at `https://batjaa.com/newsletter/`.
+
+To build one translation:
+
+```bash
+npm --prefix newsletter run build -- --issue=2026-09.mn
+```
+
+Email sending defaults to **English** and ignores translated and preview files when
+selecting the latest issue. To explicitly test a Mongolian email:
+
+```bash
+npm --prefix newsletter run send:test -- --language=mn --issue=2026-09.mn
+```
+
+Subscriber language preferences are not implemented: the subscription form still joins
+the existing English mailing list, as explained on the Mongolian archive. An explicit
+`--language=mn` broadcast would send to the entire existing list, not a Mongolian segment.
+The GitHub sending workflow continues to use English.
+
+Run `npm --prefix newsletter test` for rendering, date, language selection, photo grouping,
+and translation media/link parity checks. Shared email translations live in
+`newsletter/templates/components/locale.ts`; archive labels live in `i18n/`.
+
 ### Images
 
 Consecutive image-only blocks (HTML `<img>` tags or Markdown images, separated by blank lines) form a photo group. Put a paragraph between images to keep them separate.

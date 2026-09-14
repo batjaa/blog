@@ -4,6 +4,8 @@ import { createHmac } from "crypto";
 import { config } from "dotenv";
 import { ServerClient } from "postmark";
 import { createClient } from "@libsql/client/web";
+import { parseIssueFilename, selectSendIssue } from "./issues";
+import { formatIssueDate } from "../templates/components/locale";
 
 // Load .env from project root
 config({ path: path.join(__dirname, "../../.env") });
@@ -62,10 +64,9 @@ async function getSubscribers(): Promise<string[]> {
 }
 
 function buildSubject(issueSlug: string): string {
-  const [year, month] = issueSlug.split("-");
-  const date = new Date(parseInt(year), parseInt(month) - 1);
-  const formatted = date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-  return `A letter from Batjaa — ${formatted}`;
+  const issue = parseIssueFilename(`${issueSlug}.html`);
+  const formatted = formatIssueDate(`${issue.slug}-01`, issue.language);
+  return `${issue.language === "mn" ? "Батжаагийн захидал" : "A letter from Batjaa"} — ${formatted}`;
 }
 
 async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void> {
@@ -182,6 +183,8 @@ async function main() {
   const isTest = args.includes("--test");
   const isBroadcast = args.includes("--broadcast");
   const issueArg = args.find((a) => a.startsWith("--issue="));
+  const language = args.find((a) => a.startsWith("--language="))?.split("=")[1] ?? "en";
+  if (language !== "en" && language !== "mn") throw new Error("Language must be en or mn");
 
   if (!isTest && !isBroadcast) {
     console.log("Usage:");
@@ -189,24 +192,14 @@ async function main() {
     console.log("  npm run send:broadcast               Send to all subscribers");
     console.log("");
     console.log("Options:");
-    console.log("  --issue=2026-01                      Send specific issue (default: latest)");
+    console.log("  --issue=2026-01                      Send specific issue (default: latest in selected language)");
+    console.log("  --language=en                       en (default) or mn; use --issue=2026-01.mn for Mongolian");
     process.exit(1);
   }
 
-  let issueSlug: string;
-
-  if (issueArg) {
-    issueSlug = issueArg.split("=")[1];
-  } else {
-    // Find the most recent issue
-    const files = fs.readdirSync(DIST_DIR).filter((f) => f.endsWith(".html"));
-    if (files.length === 0) {
-      console.error("No built newsletters found. Run 'npm run build' first.");
-      process.exit(1);
-    }
-    // Sort by filename (YYYY-MM.html format) and get the latest
-    issueSlug = files.sort().reverse()[0].replace(".html", "");
-  }
+  const issueSlug = selectSendIssue(
+    fs.readdirSync(DIST_DIR), language, issueArg?.split("=")[1],
+  );
 
   console.log(`\n📨 Newsletter: ${issueSlug}\n`);
 

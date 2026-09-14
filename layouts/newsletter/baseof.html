@@ -3,7 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <meta name="description" content="Monthly newsletter from Batjaa - family updates, tech insights, and more">
+    <meta name="description" content="{{ i18n "newsletter_meta" }}">
+    <link rel="canonical" href="{{ .Permalink }}">
+    {{ range .AllTranslations }}
+    <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+    {{ end }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ $photosCSS := resources.Get "css/newsletter-photos.generated.css" | fingerprint }}
     <link rel="stylesheet" href="{{ $photosCSS.RelPermalink }}" integrity="{{ $photosCSS.Data.Integrity }}">
@@ -276,9 +280,16 @@
     <header class="newsletter-header">
         <div class="newsletter-header-inner">
             <nav class="newsletter-nav">
-                <a href="{{ .Site.BaseURL }}" class="newsletter-logo">Batjaa</a>
-                <a href="{{ .Site.BaseURL }}newsletter/" class="newsletter-back">← All newsletters</a>
+                <a href="{{ .Site.BaseURL }}" class="newsletter-logo">{{ i18n "newsletter_author" }}</a>
+                <a href="{{ .Site.BaseURL }}newsletter/" class="newsletter-back">← {{ i18n "newsletter_all" }}</a>
             </nav>
+            {{ if .IsTranslated }}
+            <nav aria-label="{{ i18n "newsletter_language" }}" class="flex shrink-0 gap-4 text-sm">
+                {{ range .Translations }}
+                <a href="{{ .Permalink }}" lang="{{ .Language.Lang }}" hreflang="{{ .Language.Lang }}" class="text-blue-700 underline underline-offset-4">{{ if eq .Language.Lang "mn" }}Монгол{{ else }}English{{ end }}</a>
+                {{ end }}
+            </nav>
+            {{ end }}
         </div>
     </header>
 
@@ -288,8 +299,8 @@
 
     <footer class="newsletter-footer">
         <p>
-            <a href="{{ .Site.BaseURL }}">batjaa.com</a> ·
-            Made with ♥ in Bothell, WA
+            <a href="{{ .Site.BaseURL }}">{{ .Site.Params.website }}</a> ·
+            {{ i18n "newsletter_footer" }}
         </p>
     </footer>
     <script>
@@ -311,7 +322,7 @@
                     statusEl.classList.remove("success", "error");
                     submitButton.disabled = true;
                     var originalButtonText = submitButton.textContent;
-                    submitButton.textContent = "Subscribing...";
+                    submitButton.textContent = {{ i18n "newsletter_subscribing" }};
 
                     try {
                         var response = await fetch(form.action, {
@@ -325,20 +336,22 @@
                         var payload = await response.json().catch(function () { return {}; });
 
                         if (response.ok && payload.success) {
-                            statusEl.textContent = payload.message || "Thanks for subscribing!";
+                            statusEl.textContent = payload.message === "You're already subscribed!"
+                                ? {{ i18n "newsletter_already" }} : {{ i18n "newsletter_confirm" }};
                             statusEl.classList.add("success");
                             form.reset();
                         } else {
-                            statusEl.textContent = payload.error || "Subscription failed. Please try again.";
+                            statusEl.textContent = payload.error === "This address cannot be subscribed right now. Please contact support."
+                                ? {{ i18n "newsletter_suppressed" }} : {{ i18n "newsletter_error" }};
                             statusEl.classList.add("error");
                         }
                     } catch (error) {
-                        statusEl.textContent = "Network error. Please try again in a moment.";
+                        statusEl.textContent = {{ i18n "newsletter_network_error" }};
                         statusEl.classList.add("error");
                     } finally {
                         statusEl.hidden = false;
                         submitButton.disabled = false;
-                        submitButton.textContent = originalButtonText || "Subscribe";
+                        submitButton.textContent = originalButtonText || {{ i18n "newsletter_subscribe" }};
                     }
                 });
             });

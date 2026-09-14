@@ -1,5 +1,6 @@
 import { Section, Heading, Text, Img, Link, Row, Column } from "@react-email/components";
 import * as React from "react";
+import { newsletterCopy, type NewsletterLanguage } from "./locale";
 
 interface Movie {
   title: string;
@@ -17,6 +18,7 @@ interface Song {
 }
 
 interface ConsumptionGridProps {
+  language?: NewsletterLanguage;
   movies?: Movie[];
   songs?: Song[];
   spotifyPlaylistUrl?: string;
@@ -26,6 +28,7 @@ interface ConsumptionGridProps {
 }
 
 export const ConsumptionGrid = ({
+  language = "en",
   movies = [],
   songs = [],
   spotifyPlaylistUrl,
@@ -37,10 +40,11 @@ export const ConsumptionGrid = ({
     return null;
   }
 
+  const copy = newsletterCopy[language];
   return (
     <Section style={sectionContainer}>
       <Heading as="h2" style={sectionTitle}>
-        What I've Been Watching & Listening To
+        {copy.watching}
       </Heading>
 
       {watchingNote && <Text style={musicNoteText}>{watchingNote}</Text>}
@@ -78,9 +82,9 @@ export const ConsumptionGrid = ({
               />
             </Column>
             <Column style={spotifyTextCol}>
-              <Text style={spotifyLabel}>This month's playlist</Text>
+              <Text style={spotifyLabel}>{copy.playlist}</Text>
               <Link href={spotifyPlaylistUrl} style={spotifyLink}>
-                {spotifyPlaylistName || "Listen on Spotify"}
+                {spotifyPlaylistName || copy.listen}
               </Link>
             </Column>
           </Row>

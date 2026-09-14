@@ -1,7 +1,9 @@
 import { Section, Heading, Text, Img, Row, Column } from "@react-email/components";
 import * as React from "react";
+import { newsletterCopy, type NewsletterLanguage } from "./locale";
 
 interface TradingCardProps {
+  language?: NewsletterLanguage;
   pnl: string;
   sentiment: "positive" | "negative" | "neutral";
   chartUrl?: string;
@@ -9,15 +11,17 @@ interface TradingCardProps {
 }
 
 export const TradingCard = ({
+  language = "en",
   pnl,
   sentiment,
   chartUrl,
   summary,
 }: TradingCardProps) => {
+  const copy = newsletterCopy[language];
   const sentimentConfig = {
-    positive: { color: "#059669", bg: "#d1fae5", label: "Good month" },
-    negative: { color: "#dc2626", bg: "#fee2e2", label: "Rough month" },
-    neutral: { color: "#6b7280", bg: "#f3f4f6", label: "Flat month" },
+    positive: { color: "#059669", bg: "#d1fae5", label: copy.positive },
+    negative: { color: "#dc2626", bg: "#fee2e2", label: copy.negative },
+    neutral: { color: "#6b7280", bg: "#f3f4f6", label: copy.neutral },
   };
 
   const config = sentimentConfig[sentiment];
@@ -26,13 +30,13 @@ export const TradingCard = ({
   return (
     <Section style={sectionContainer}>
       <Heading as="h2" style={sectionTitle}>
-        Trading Update
+        {copy.tradingUpdate}
       </Heading>
 
       <Section style={cardContainer}>
         <Row>
           <Column style={pnlColumn}>
-            <Text style={pnlLabel}>Month P&L</Text>
+            <Text style={pnlLabel}>{copy.pnl}</Text>
             <Text
               style={{
                 ...pnlValue,
@@ -52,7 +56,7 @@ export const TradingCard = ({
             <Column>
               <Img
                 src={chartUrl}
-                alt="Monthly trading chart"
+                alt={copy.tradingChart}
                 width="520"
                 style={chartImage}
               />

@@ -1,0 +1,36 @@
+- id: newsletter_archive
+  translation: "Захидлын архив"
+- id: newsletter_description
+  translation: "Манай гэр бүлийн сар бүрийн сонин сайхан."
+- id: newsletter_meta
+  translation: "Батжаагийн сар бүрийн захидал — гэр бүл, технологи, амьдралын сонин сайхан"
+- id: newsletter_empty
+  translation: "Одоогоор захидал алга. Удахгүй эргээд зочлоорой!"
+- id: newsletter_subscribe_heading
+  translation: "Шинэ дугаар бүрийг хүлээн аваарай"
+- id: newsletter_subscribe_description
+  translation: "Сар бүрийн захидлыг имэйлээр авах боломжтой. Одоогоор имэйлүүд англи хэлээр очно; монгол хувилбаруудыг эндээс уншаарай."
+- id: newsletter_subscribe
+  translation: "Захиалах"
+- id: newsletter_email
+  translation: "Имэйл хаяг"
+- id: newsletter_all
+  translation: "Бүх захидал"
+- id: newsletter_author
+  translation: "Батжаа"
+- id: newsletter_footer
+  translation: "Вашингтон мужийн Ботелл хотоос ♥"
+- id: newsletter_subscribing
+  translation: "Захиалж байна..."
+- id: newsletter_confirm
+  translation: "Захиалгаа баталгаажуулахын тулд имэйлээ шалгаарай."
+- id: newsletter_already
+  translation: "Та аль хэдийн захиалсан байна!"
+- id: newsletter_error
+  translation: "Захиалж чадсангүй. Дахин оролдоно уу."
+- id: newsletter_suppressed
+  translation: "Энэ хаягаар одоогоор захиалах боломжгүй байна. Бидэнтэй холбоо барина уу."
+- id: newsletter_network_error
+  translation: "Сүлжээний алдаа гарлаа. Түр хүлээгээд дахин оролдоно уу."
+- id: newsletter_language
+  translation: "Хэл"

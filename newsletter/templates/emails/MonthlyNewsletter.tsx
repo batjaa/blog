@@ -2,6 +2,9 @@ import { Text, Link, Img, Section, Row, Column } from "@react-email/components";
 import * as React from "react";
 import {
   Layout,
+  newsletterCopy,
+  formatIssueDate,
+  type NewsletterLanguage,
   HeroSection,
   ContentSection,
   Paragraph,
@@ -51,6 +54,9 @@ interface Song {
 }
 
 interface NewsletterProps {
+  language?: NewsletterLanguage;
+  issueSlug?: string;
+  web?: boolean;
   title: string;
   date: string;
   featuredImage?: string;
@@ -64,6 +70,7 @@ interface NewsletterProps {
   travelContent?: string;
   tradingContent?: string;
   closingContent?: string;
+  randomThoughtsContent?: string;
 
   // Structured data
   trading?: Trading;
@@ -76,12 +83,6 @@ interface NewsletterProps {
   books?: Book[];
   projects?: Project[];
 }
-
-const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  // Issue dates are calendar dates; local time must not shift them into the prior month.
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
-};
 
 // Default props for React Email preview
 const previewProps: NewsletterProps = {
@@ -120,70 +121,75 @@ const previewProps: NewsletterProps = {
 };
 
 export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
+  const language = props.language ?? "en";
+  const copy = newsletterCopy[language];
+  const isPreview = Object.keys(props).length === 0;
   const title = props.title ?? previewProps.title;
   const date = props.date ?? previewProps.date;
   const featuredImage = props.featuredImage ?? previewProps.featuredImage;
-  const greeting = props.greeting ?? previewProps.greeting;
-  const familyContent = props.familyContent ?? previewProps.familyContent;
-  const professionalContent = props.professionalContent ?? previewProps.professionalContent;
+  const greeting = props.greeting ?? copy.greeting;
+  const familyContent = props.familyContent ?? (isPreview ? previewProps.familyContent : undefined);
+  const professionalContent = props.professionalContent ?? (isPreview ? previewProps.professionalContent : undefined);
   const healthContent = props.healthContent;
   const travelContent = props.travelContent;
   const trading = props.trading;
-  const movies = props.movies ?? previewProps.movies ?? [];
+  const movies = props.movies ?? (isPreview ? previewProps.movies : []) ?? [];
   const songs = props.songs ?? [];
   const spotifyPlaylistUrl = props.spotifyPlaylistUrl;
   const spotifyPlaylistName = props.spotifyPlaylistName;
   const musicNote = props.musicNote;
   const watchingNote = props.watchingNote;
-  const books = props.books ?? previewProps.books ?? [];
+  const books = props.books ?? (isPreview ? previewProps.books : []) ?? [];
   const projects = props.projects ?? [];
 
-  const formattedDate = formatDate(date!);
-  const previewText = `${title} - Updates from the Batjaa family`;
+  const formattedDate = formatIssueDate(date!, language);
+  const previewText = `${title} - ${copy.preview}`;
 
   return (
-    <Layout preview={previewText}>
+    <Layout preview={previewText} language={language} issueSlug={props.issueSlug} web={props.web}>
       <HeroSection
         title={title}
         subtitle={formattedDate}
         imageUrl={featuredImage}
+        imageAlt={copy.heroAlt}
       />
 
       {/* Greeting */}
       <Section style={greetingSection}>
         <Text style={greetingText}>{greeting}</Text>
         <Text style={introText}>
-          {props.intro ?? "Here's what's been happening in our world this month."}
+          {props.intro ?? copy.intro}
         </Text>
       </Section>
 
       {/* Family Section */}
       {familyContent ? (
-        <ContentSection title="Family">
+        <ContentSection title={copy.family}>
           <div dangerouslySetInnerHTML={{ __html: familyContent }} />
         </ContentSection>
       ) : (
-        <PlaceholderSection title="Family" />
+        <PlaceholderSection title={copy.family} language={language} />
       )}
 
       {/* Professional Section */}
       {professionalContent ? (
-        <ContentSection title="Professional">
+        <ContentSection title={copy.professional}>
           <div dangerouslySetInnerHTML={{ __html: professionalContent }} />
           {projects.length > 0 && <ProjectsGrid projects={projects} />}
         </ContentSection>
       ) : (
-        <PlaceholderSection title="Professional" />
+        <PlaceholderSection title={copy.professional} language={language} />
       )}
 
       {/* Trading Section */}
       {props.tradingContent && (
-        <ContentSection title="Trading">
+        <ContentSection title={copy.trading}>
           <div dangerouslySetInnerHTML={{ __html: props.tradingContent }} />
         </ContentSection>
       )}
       {trading && (
         <TradingCard
+          language={language}
           pnl={trading.pnl}
           sentiment={trading.sentiment}
           chartUrl={trading.chartUrl}
@@ -194,6 +200,7 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       {/* Consumption Grid (Movies & Music) */}
       {(movies.length > 0 || songs.length > 0 || spotifyPlaylistUrl || musicNote || watchingNote) && (
         <ConsumptionGrid
+          language={language}
           movies={movies}
           songs={songs}
           spotifyPlaylistUrl={spotifyPlaylistUrl}
@@ -204,21 +211,27 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       )}
 
       {/* Books Section */}
-      {books.length > 0 && <BooksSection books={books} />}
+      {books.length > 0 && <BooksSection books={books} language={language} />}
 
       {/* Health Section */}
       {healthContent ? (
-        <ContentSection title="Health & Fitness">
+        <ContentSection title={copy.health}>
           <div dangerouslySetInnerHTML={{ __html: healthContent }} />
         </ContentSection>
       ) : null}
 
       {/* Travel Section */}
       {travelContent ? (
-        <ContentSection title="Travel & Adventures">
+        <ContentSection title={copy.travel}>
           <div dangerouslySetInnerHTML={{ __html: travelContent }} />
         </ContentSection>
       ) : null}
+
+      {props.randomThoughtsContent && (
+        <ContentSection title={copy.randomThoughts}>
+          <div dangerouslySetInnerHTML={{ __html: props.randomThoughtsContent }} />
+        </ContentSection>
+      )}
 
       {/* Closing */}
       <Section style={closingSection}>
@@ -226,10 +239,9 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
           <div style={closingText} dangerouslySetInnerHTML={{ __html: props.closingContent }} />
         )}
         <Text style={closingText}>
-          Thanks for reading! Reply to this email if you want to say hi - I read
-          every response.
+          {copy.closing}
         </Text>
-        <Text style={signatureText}>- Batjaa</Text>
+        <Text style={signatureText}>{copy.signature}</Text>
       </Section>
     </Layout>
   );

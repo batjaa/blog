@@ -1,5 +1,27 @@
 // Email keeps the table gallery. The web enhances it without hiding photos
 // when JavaScript is unavailable. There is deliberately no autoplay.
+const mongolianPhotos = document.documentElement.lang === "mn";
+const photoCopy = mongolianPhotos ? {
+  gallery: (number) => `Зургийн цомог ${number}`,
+  instructions: "Зургууд. Зүүн, баруун сумтай товчоор гүйлгэж үзээрэй.",
+  slide: (number, total) => `${total} зургийн ${number}`,
+  open: "Зургийг бүтнээр нь нээх",
+  openLabel: (number, total) => `${total} зургийн ${number}-г шинэ цонхонд нээх`,
+  previous: "Өмнөх зураг",
+  next: "Дараах зураг",
+  carousel: "зургийн цомог",
+  slideRole: "зураг",
+} : {
+  gallery: (number) => `Photo gallery ${number}`,
+  instructions: "Photos. Use the left and right arrow keys to browse.",
+  slide: (number, total) => `${number} of ${total}`,
+  open: "Open full photo",
+  openLabel: (number, total) => `Open photo ${number} of ${total} in a new tab`,
+  previous: "Previous photo",
+  next: "Next photo",
+  carousel: "carousel",
+  slideRole: "slide",
+};
 document.querySelectorAll("[data-photo-gallery]").forEach((table, galleryIndex) => {
   const originals = [...table.querySelectorAll("img")];
   if (originals.length < 2) return;
@@ -7,21 +29,21 @@ document.querySelectorAll("[data-photo-gallery]").forEach((table, galleryIndex) 
   const gallery = document.createElement("section");
   gallery.className = "my-6 min-w-0";
   gallery.setAttribute("role", "group");
-  gallery.setAttribute("aria-roledescription", "carousel");
-  gallery.setAttribute("aria-label", `Photo gallery ${galleryIndex + 1}`);
+  gallery.setAttribute("aria-roledescription", photoCopy.carousel);
+  gallery.setAttribute("aria-label", photoCopy.gallery(galleryIndex + 1));
 
   const track = document.createElement("div");
   track.id = `newsletter-photos-${galleryIndex + 1}`;
   track.className = "flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-lg bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700";
   track.tabIndex = 0;
-  track.setAttribute("aria-label", "Photos. Use the left and right arrow keys to browse.");
+  track.setAttribute("aria-label", photoCopy.instructions);
 
   const slides = originals.map((original, index) => {
     const slide = document.createElement("div");
     slide.className = "flex aspect-[4/3] w-full min-w-0 shrink-0 snap-center items-center justify-center";
     slide.setAttribute("role", "group");
-    slide.setAttribute("aria-roledescription", "slide");
-    slide.setAttribute("aria-label", `${index + 1} of ${originals.length}`);
+    slide.setAttribute("aria-roledescription", photoCopy.slideRole);
+    slide.setAttribute("aria-label", photoCopy.slide(index + 1, originals.length));
     const image = original.cloneNode(true);
     image.removeAttribute("style");
     image.removeAttribute("width");
@@ -44,7 +66,7 @@ document.querySelectorAll("[data-photo-gallery]").forEach((table, galleryIndex) 
   caption.className = "mt-2 mb-0 text-xs font-normal italic leading-snug text-slate-500";
   const fullSize = document.createElement("a");
   fullSize.className = "text-sm text-blue-700 underline underline-offset-4 hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700";
-  fullSize.textContent = "Open full photo";
+  fullSize.textContent = photoCopy.open;
   fullSize.target = "_blank";
   fullSize.rel = "noopener noreferrer";
 
@@ -53,7 +75,7 @@ document.querySelectorAll("[data-photo-gallery]").forEach((table, galleryIndex) 
     counter.textContent = `${active + 1} / ${slides.length}`;
     caption.textContent = originals[active].alt;
     fullSize.href = originals[active].src;
-    fullSize.setAttribute("aria-label", `Open photo ${active + 1} of ${slides.length} in a new tab`);
+    fullSize.setAttribute("aria-label", photoCopy.openLabel(active + 1, slides.length));
     // Keep keyboard focus on the control, even at either end of the gallery.
     previous.setAttribute("aria-disabled", String(active === 0));
     next.setAttribute("aria-disabled", String(active === slides.length - 1));
@@ -73,8 +95,8 @@ document.querySelectorAll("[data-photo-gallery]").forEach((table, galleryIndex) 
     element.addEventListener("click", () => goTo(active + direction));
     return element;
   };
-  const previous = button("Previous photo", -1, "M14 6l-6 6 6 6");
-  const next = button("Next photo", 1, "M10 6l6 6-6 6");
+  const previous = button(photoCopy.previous, -1, "M14 6l-6 6 6 6");
+  const next = button(photoCopy.next, 1, "M10 6l6 6-6 6");
   const navigation = document.createElement("div");
   navigation.className = "flex items-center gap-3";
   navigation.append(previous, counter, next);

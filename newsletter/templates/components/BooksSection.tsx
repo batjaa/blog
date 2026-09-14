@@ -1,5 +1,6 @@
 import { Section, Heading, Text, Img, Link, Row, Column } from "@react-email/components";
 import * as React from "react";
+import { newsletterCopy, type NewsletterLanguage } from "./locale";
 
 interface Book {
   title: string;
@@ -11,24 +12,26 @@ interface Book {
 }
 
 interface BooksSectionProps {
+  language?: NewsletterLanguage;
   books: Book[];
 }
 
-export const BooksSection = ({ books }: BooksSectionProps) => {
+export const BooksSection = ({ books, language = "en" }: BooksSectionProps) => {
   if (books.length === 0) {
     return null;
   }
 
+  const copy = newsletterCopy[language];
   const statusConfig = {
-    reading: { label: "Currently reading", color: "#2563eb", bg: "#dbeafe" },
-    finished: { label: "Finished", color: "#059669", bg: "#d1fae5" },
-    abandoned: { label: "DNF", color: "#6b7280", bg: "#f3f4f6" },
+    reading: { label: copy.currentlyReading, color: "#2563eb", bg: "#dbeafe" },
+    finished: { label: copy.finished, color: "#059669", bg: "#d1fae5" },
+    abandoned: { label: copy.abandoned, color: "#6b7280", bg: "#f3f4f6" },
   };
 
   return (
     <Section style={sectionContainer}>
       <Heading as="h2" style={sectionTitle}>
-        Reading
+        {copy.reading}
       </Heading>
 
       {books.map((book, index) => {
@@ -68,7 +71,7 @@ export const BooksSection = ({ books }: BooksSectionProps) => {
                   book.title
                 )}
               </Text>
-              <Text style={bookAuthor}>by {book.author}</Text>
+              <Text style={bookAuthor}>{copy.author} {book.author}</Text>
               {status && (
                 <Text style={{ ...statusBadge, backgroundColor: status.bg, color: status.color }}>
                   {status.label}

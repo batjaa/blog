@@ -5,3 +5,4 @@ export { TradingCard } from "./TradingCard";
 export { ConsumptionGrid } from "./ConsumptionGrid";
 export { BooksSection } from "./BooksSection";
 export { ProjectsGrid } from "./ProjectsGrid";
+export { newsletterCopy, newsletterBaseUrl, formatIssueDate, type NewsletterLanguage } from "./locale";

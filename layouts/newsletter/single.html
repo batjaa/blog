@@ -5,17 +5,9 @@
 {{ $photosJS := resources.Get "js/newsletter-photos.js" | minify | fingerprint }}
 <script src="{{ $photosJS.RelPermalink }}" integrity="{{ $photosJS.Data.Integrity }}" defer></script>
 
-<section class="newsletter-subscribe">
-    <h3>Enjoyed this newsletter?</h3>
-    <p>Subscribe to get monthly updates delivered to your inbox.</p>
-    <form class="subscribe-form" action="/api/subscribe" method="POST">
-        <input type="email" name="email" placeholder="your@email.com" required>
-        <button type="submit">Subscribe</button>
-    </form>
-    <p class="subscribe-status" role="status" aria-live="polite" hidden></p>
-</section>
+{{ partial "newsletter/subscribe.html" . }}
 
 <div class="newsletter-archive">
-    <a href="{{ .Site.BaseURL }}newsletter/">View all newsletters →</a>
+    <a href="{{ .Site.BaseURL }}newsletter/">{{ i18n "newsletter_all" }} →</a>
 </div>
 {{ end }}

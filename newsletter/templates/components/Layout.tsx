@@ -11,15 +11,19 @@ import {
   Link,
 } from "@react-email/components";
 import * as React from "react";
+import { newsletterCopy, newsletterBaseUrl, type NewsletterLanguage } from "./locale";
 
 interface LayoutProps {
+  language?: NewsletterLanguage;
+  issueSlug?: string;
+  web?: boolean;
   preview: string;
   children: React.ReactNode;
 }
 
-export const Layout = ({ preview, children }: LayoutProps) => {
+export const Layout = ({ preview, children, language = "en", issueSlug, web = false }: LayoutProps) => {
   return (
-    <Html lang="en">
+    <Html lang={language}>
       <Head>
         <Font
           fontFamily="Georgia"
@@ -38,33 +42,36 @@ export const Layout = ({ preview, children }: LayoutProps) => {
       <Body style={body}>
         <Container style={container}>
           {children}
-          <Footer />
+          {!web && <Footer language={language} issueSlug={issueSlug} />}
         </Container>
       </Body>
     </Html>
   );
 };
 
-const Footer = () => (
+const Footer = ({ language, issueSlug }: { language: NewsletterLanguage; issueSlug?: string }) => {
+  const copy = newsletterCopy[language];
+  return (
   <Section style={footer}>
     <Hr style={divider} />
     <Text style={footerText}>
-      You're receiving this because you subscribed to Batjaa's Newsletter.
+      {copy.subscribed}
     </Text>
     <Text style={footerText}>
       <Link href="{{unsubscribe_url}}" style={footerLink}>
-        Unsubscribe
+        {copy.unsubscribe}
       </Link>
       {" · "}
-      <Link href="https://batjaa.com/newsletter" style={footerLink}>
-        View in browser
+      <Link href={`${newsletterBaseUrl(language)}/newsletter/${issueSlug ? `${issueSlug}/` : ""}`} style={footerLink}>
+        {copy.viewInBrowser}
       </Link>
     </Text>
     <Text style={footerSignature}>
-      With love from Bothell, WA
+      {copy.from}
     </Text>
   </Section>
-);
+  );
+};
 
 const body: React.CSSProperties = {
   backgroundColor: "#f9fafb",

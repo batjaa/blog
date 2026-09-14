@@ -1,0 +1,36 @@
+- id: newsletter_archive
+  translation: "Newsletter Archive"
+- id: newsletter_description
+  translation: "Monthly updates from our family to yours."
+- id: newsletter_meta
+  translation: "Monthly newsletter from Batjaa - family updates, tech insights, and more"
+- id: newsletter_empty
+  translation: "No newsletters yet. Check back soon!"
+- id: newsletter_subscribe_heading
+  translation: "Never miss an update"
+- id: newsletter_subscribe_description
+  translation: "Subscribe to get monthly newsletters delivered to your inbox."
+- id: newsletter_subscribe
+  translation: "Subscribe"
+- id: newsletter_email
+  translation: "Email address"
+- id: newsletter_all
+  translation: "All newsletters"
+- id: newsletter_author
+  translation: "Batjaa"
+- id: newsletter_footer
+  translation: "Made with ♥ in Bothell, WA"
+- id: newsletter_subscribing
+  translation: "Subscribing..."
+- id: newsletter_confirm
+  translation: "Check your inbox to confirm your subscription."
+- id: newsletter_already
+  translation: "You're already subscribed!"
+- id: newsletter_error
+  translation: "Subscription failed. Please try again."
+- id: newsletter_suppressed
+  translation: "This address cannot be subscribed right now. Please contact support."
+- id: newsletter_network_error
+  translation: "Network error. Please try again in a moment."
+- id: newsletter_language
+  translation: "Language"

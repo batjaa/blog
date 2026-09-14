@@ -1,7 +1,7 @@
 {{ define "main" }}
 <div class="newsletter-content" style="padding: 40px;">
-    <h1 style="margin: 0 0 8px 0; font-size: 28px; font-family: Georgia, serif;">Newsletter Archive</h1>
-    <p style="margin: 0 0 32px 0; color: #6b7280;">Monthly updates from our family to yours.</p>
+    <h1 style="margin: 0 0 8px 0; font-size: 28px; font-family: Georgia, serif;">{{ i18n "newsletter_archive" }}</h1>
+    <p style="margin: 0 0 32px 0; color: #6b7280;">{{ i18n "newsletter_description" }}</p>
 
     {{ if .Pages }}
     <ul style="list-style: none; padding: 0; margin: 0;">
@@ -12,24 +12,16 @@
                     {{ .Title }}
                 </span>
                 <span style="font-size: 14px; color: #6b7280;">
-                    {{ .Date.Format "January 2006" }}
+                    {{ if eq .Language.Lang "mn" }}{{ .Date.Year }} оны {{ int .Date.Month }}-р сар{{ else }}{{ .Date.Format "January 2006" }}{{ end }}
                 </span>
             </a>
         </li>
         {{ end }}
     </ul>
     {{ else }}
-    <p style="color: #6b7280; font-style: italic;">No newsletters yet. Check back soon!</p>
+    <p style="color: #6b7280; font-style: italic;">{{ i18n "newsletter_empty" }}</p>
     {{ end }}
 </div>
 
-<section class="newsletter-subscribe">
-    <h3>Never miss an update</h3>
-    <p>Subscribe to get monthly newsletters delivered to your inbox.</p>
-    <form class="subscribe-form" action="/api/subscribe" method="POST">
-        <input type="email" name="email" placeholder="your@email.com" required>
-        <button type="submit">Subscribe</button>
-    </form>
-    <p class="subscribe-status" role="status" aria-live="polite" hidden></p>
-</section>
+{{ partial "newsletter/subscribe.html" . }}
 {{ end }}

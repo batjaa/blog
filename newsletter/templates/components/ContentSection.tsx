@@ -1,5 +1,6 @@
 import { Section, Heading, Text } from "@react-email/components";
 import * as React from "react";
+import { newsletterCopy, type NewsletterLanguage } from "./locale";
 
 interface ContentSectionProps {
   title: string;
@@ -28,17 +29,18 @@ export const Paragraph = ({ children }: ParagraphProps) => (
 );
 
 interface PlaceholderProps {
+  language?: NewsletterLanguage;
   title: string;
   icon?: string;
 }
 
-export const PlaceholderSection = ({ title, icon }: PlaceholderProps) => (
+export const PlaceholderSection = ({ title, icon, language = "en" }: PlaceholderProps) => (
   <Section style={sectionContainer}>
     <Heading as="h2" style={sectionTitle}>
       {icon && <span style={iconStyle}>{icon}</span>}
       {title}
     </Heading>
-    <Text style={placeholderText}>Nothing new this month!</Text>
+    <Text style={placeholderText}>{newsletterCopy[language].nothingNew}</Text>
   </Section>
 );
 

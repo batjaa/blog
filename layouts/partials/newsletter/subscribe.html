@@ -1,0 +1,9 @@
+<section class="newsletter-subscribe">
+    <h3>{{ i18n "newsletter_subscribe_heading" }}</h3>
+    <p>{{ i18n "newsletter_subscribe_description" }}</p>
+    <form class="subscribe-form" action="/api/subscribe" method="POST">
+        <input type="email" name="email" placeholder="your@email.com" aria-label="{{ i18n "newsletter_email" }}" required>
+        <button type="submit">{{ i18n "newsletter_subscribe" }}</button>
+    </form>
+    <p class="subscribe-status" role="status" aria-live="polite" hidden></p>
+</section>
