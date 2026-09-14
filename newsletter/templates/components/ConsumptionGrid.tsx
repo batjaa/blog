@@ -6,7 +6,7 @@ interface Movie {
   year?: string;
   posterUrl?: string;
   rating?: string;
-  comment: string;
+  comment?: string;
   imdbUrl: string;
 }
 
@@ -22,6 +22,7 @@ interface ConsumptionGridProps {
   spotifyPlaylistUrl?: string;
   spotifyPlaylistName?: string;
   musicNote?: string;
+  watchingNote?: string;
 }
 
 export const ConsumptionGrid = ({
@@ -30,8 +31,9 @@ export const ConsumptionGrid = ({
   spotifyPlaylistUrl,
   spotifyPlaylistName,
   musicNote,
+  watchingNote,
 }: ConsumptionGridProps) => {
-  if (movies.length === 0 && songs.length === 0 && !spotifyPlaylistUrl && !musicNote) {
+  if (movies.length === 0 && songs.length === 0 && !spotifyPlaylistUrl && !musicNote && !watchingNote) {
     return null;
   }
 
@@ -40,6 +42,8 @@ export const ConsumptionGrid = ({
       <Heading as="h2" style={sectionTitle}>
         What I've Been Watching & Listening To
       </Heading>
+
+      {watchingNote && <Text style={musicNoteText}>{watchingNote}</Text>}
 
       {movies.length > 0 && (
         <Section style={moviesSection}>
@@ -116,7 +120,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
             <span style={starIcon}>★</span> {movie.rating}
           </Text>
         )}
-        <Text style={movieComment}>{movie.comment}</Text>
+        {movie.comment && <Text style={movieComment}>{movie.comment}</Text>}
       </Column>
     </Row>
   );

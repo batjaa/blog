@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "css:build": "lessc --math=parens-division themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css",
+    "css:build": "lessc --math=parens-division themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css && npm run css:newsletter",
     "css:watch": "lessc --math=parens-division themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css --watch",
     "dev": "npm run css:build && hugo serve --ignoreCache --forceSyncStatic",
     "build": "npm run css:build && hugo --minify",
@@ -19,12 +19,15 @@
     "newsletter:send:broadcast": "cd newsletter && npm run send:broadcast",
     "newsletter:new": "node scripts/new-newsletter.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "css:newsletter": "tailwindcss -i assets/css/newsletter-photos.css -o assets/css/newsletter-photos.generated.css --minify"
   },
   "devDependencies": {
     "@netlify/functions": "^5.1.2",
+    "@tailwindcss/cli": "^4.3.3",
     "@types/node": "^25.2.0",
     "less": "^4.2.0",
+    "tailwindcss": "^4.3.3",
     "vitest": "^4.0.18"
   },
   "author": "Batjargal Batbold",

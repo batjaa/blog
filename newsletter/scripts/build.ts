@@ -5,6 +5,7 @@ import { config } from "dotenv";
 import matter from "gray-matter";
 import { marked } from "marked";
 import { MonthlyNewsletter } from "../templates/emails/MonthlyNewsletter";
+import { groupPhotos } from "./photos";
 
 // Load .env from project root
 config({ path: path.join(__dirname, "../../.env") });
@@ -14,14 +15,15 @@ const DIST_DIR = path.join(__dirname, "../dist");
 const HUGO_NEWSLETTER_DIR = path.join(__dirname, "../../content/newsletter");
 
 interface MovieFrontmatter {
+  title?: string;
   url: string;
-  comment: string;
+  comment?: string;
 }
 
 interface BookFrontmatter {
   title: string;
   author: string;
-  status: "reading" | "finished" | "abandoned";
+  status?: "reading" | "finished" | "abandoned";
   comment?: string;
   cover_url?: string;
   link?: string;
@@ -53,6 +55,7 @@ interface IssueFrontmatter {
   active?: boolean;
   featured_image?: string;
   greeting?: string;
+  intro?: string;
   trading?: TradingFrontmatter;
   movies?: MovieFrontmatter[];
   songs?: SongFrontmatter[];
@@ -61,6 +64,7 @@ interface IssueFrontmatter {
   books?: BookFrontmatter[];
   projects?: ProjectFrontmatter[];
   music_note?: string;
+  watching_note?: string;
 }
 
 // Extract content between ## headers
@@ -97,13 +101,14 @@ function extractSections(markdown: string): Record<string, string> {
 async function markdownToHtml(md: string): Promise<string> {
   if (!md) return "";
 
-  const html = await marked(md, {
+  const html = await marked(groupPhotos(md), {
     gfm: true,
     breaks: true,
   });
 
   // Add inline styles for email compatibility
   return html
+    .replace(/<img\b(?![^>]*\bstyle=)/g, '<img style="max-width:100%;height:auto;"')
     .replace(/<p>/g, '<p style="margin: 0 0 16px 0; line-height: 26px;">')
     .replace(/<ul>/g, '<ul style="margin: 0 0 16px 0; padding-left: 24px;">')
     .replace(/<li>/g, '<li style="margin: 0 0 8px 0;">')
@@ -127,7 +132,7 @@ async function enrichMovies(movies: MovieFrontmatter[]): Promise<any[]> {
           if (data.Response === "True") {
             return {
               title: data.Title,
-              year: data.Year?.replace("–", ""),
+              year: data.Year?.replace(/[–—]/g, "-").replace(/-$/, ""),
               posterUrl: data.Poster !== "N/A" ? data.Poster : undefined,
               rating: data.imdbRating !== "N/A" ? data.imdbRating : undefined,
               comment: movie.comment,
@@ -140,7 +145,7 @@ async function enrichMovies(movies: MovieFrontmatter[]): Promise<any[]> {
       }
 
       return {
-        title: imdbId ? `Movie ${imdbId}` : "Unknown Movie",
+        title: movie.title || (imdbId ? `Movie ${imdbId}` : "Unknown Movie"),
         year: undefined,
         posterUrl: undefined,
         rating: undefined,
@@ -169,6 +174,8 @@ async function buildIssue(filename: string): Promise<void> {
     markdownToHtml(sections["health"] || sections["health & fitness"] || ""),
     markdownToHtml(sections["travel"] || sections["travel & adventures"] || ""),
   ]);
+  const tradingHtml = await markdownToHtml(sections["trading"] || "");
+  const closingHtml = await markdownToHtml(sections["closing"] || "");
 
   // Enrich movie data (placeholder for OMDB integration)
   const enrichedMovies = frontmatter.movies
@@ -209,16 +216,20 @@ async function buildIssue(filename: string): Promise<void> {
     date: frontmatter.date,
     featuredImage: frontmatter.featured_image,
     greeting: frontmatter.greeting,
+    intro: frontmatter.intro,
     familyContent: familyHtml || undefined,
     professionalContent: professionalHtml || undefined,
     healthContent: healthHtml || undefined,
     travelContent: travelHtml || undefined,
+    tradingContent: tradingHtml || undefined,
+    closingContent: closingHtml || undefined,
     trading,
     movies: enrichedMovies,
     songs: frontmatter.songs || [],
     spotifyPlaylistUrl: frontmatter.spotify_playlist_url,
     spotifyPlaylistName: frontmatter.spotify_playlist_name,
     musicNote: frontmatter.music_note,
+    watchingNote: frontmatter.watching_note,
     books,
     projects,
   };

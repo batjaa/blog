@@ -17,7 +17,7 @@ interface Movie {
   year?: string;
   posterUrl?: string;
   rating?: string;
-  comment: string;
+  comment?: string;
   imdbUrl: string;
 }
 
@@ -25,7 +25,7 @@ interface Book {
   title: string;
   author: string;
   coverUrl?: string;
-  status: "reading" | "finished" | "abandoned";
+  status?: "reading" | "finished" | "abandoned";
   comment?: string;
   link?: string;
 }
@@ -55,12 +55,15 @@ interface NewsletterProps {
   date: string;
   featuredImage?: string;
   greeting?: string;
+  intro?: string;
 
   // Section content (HTML strings from markdown)
   familyContent?: string;
   professionalContent?: string;
   healthContent?: string;
   travelContent?: string;
+  tradingContent?: string;
+  closingContent?: string;
 
   // Structured data
   trading?: Trading;
@@ -69,13 +72,15 @@ interface NewsletterProps {
   spotifyPlaylistUrl?: string;
   spotifyPlaylistName?: string;
   musicNote?: string;
+  watchingNote?: string;
   books?: Book[];
   projects?: Project[];
 }
 
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  // Issue dates are calendar dates; local time must not shift them into the prior month.
+  return date.toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 };
 
 // Default props for React Email preview
@@ -129,6 +134,7 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
   const spotifyPlaylistUrl = props.spotifyPlaylistUrl;
   const spotifyPlaylistName = props.spotifyPlaylistName;
   const musicNote = props.musicNote;
+  const watchingNote = props.watchingNote;
   const books = props.books ?? previewProps.books ?? [];
   const projects = props.projects ?? [];
 
@@ -147,7 +153,7 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       <Section style={greetingSection}>
         <Text style={greetingText}>{greeting}</Text>
         <Text style={introText}>
-          Here's what's been happening in our world this month.
+          {props.intro ?? "Here's what's been happening in our world this month."}
         </Text>
       </Section>
 
@@ -171,6 +177,11 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       )}
 
       {/* Trading Section */}
+      {props.tradingContent && (
+        <ContentSection title="Trading">
+          <div dangerouslySetInnerHTML={{ __html: props.tradingContent }} />
+        </ContentSection>
+      )}
       {trading && (
         <TradingCard
           pnl={trading.pnl}
@@ -181,13 +192,14 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
       )}
 
       {/* Consumption Grid (Movies & Music) */}
-      {(movies.length > 0 || songs.length > 0 || spotifyPlaylistUrl || musicNote) && (
+      {(movies.length > 0 || songs.length > 0 || spotifyPlaylistUrl || musicNote || watchingNote) && (
         <ConsumptionGrid
           movies={movies}
           songs={songs}
           spotifyPlaylistUrl={spotifyPlaylistUrl}
           spotifyPlaylistName={spotifyPlaylistName}
           musicNote={musicNote}
+          watchingNote={watchingNote}
         />
       )}
 
@@ -210,11 +222,14 @@ export const MonthlyNewsletter = (props: Partial<NewsletterProps> = {}) => {
 
       {/* Closing */}
       <Section style={closingSection}>
+        {props.closingContent && (
+          <div style={closingText} dangerouslySetInnerHTML={{ __html: props.closingContent }} />
+        )}
         <Text style={closingText}>
           Thanks for reading! Reply to this email if you want to say hi - I read
           every response.
         </Text>
-        <Text style={signatureText}>— Batjaa</Text>
+        <Text style={signatureText}>- Batjaa</Text>
       </Section>
     </Layout>
   );

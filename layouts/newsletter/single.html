@@ -2,6 +2,8 @@
 <article class="newsletter-content">
     {{ .Content | safeHTML }}
 </article>
+{{ $photosJS := resources.Get "js/newsletter-photos.js" | minify | fingerprint }}
+<script src="{{ $photosJS.RelPermalink }}" integrity="{{ $photosJS.Data.Integrity }}" defer></script>
 
 <section class="newsletter-subscribe">
     <h3>Enjoyed this newsletter?</h3>

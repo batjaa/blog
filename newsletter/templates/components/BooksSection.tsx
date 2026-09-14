@@ -5,7 +5,7 @@ interface Book {
   title: string;
   author: string;
   coverUrl?: string;
-  status: "reading" | "finished" | "abandoned";
+  status?: "reading" | "finished" | "abandoned";
   comment?: string;
   link?: string;
 }
@@ -32,7 +32,7 @@ export const BooksSection = ({ books }: BooksSectionProps) => {
       </Heading>
 
       {books.map((book, index) => {
-        const status = statusConfig[book.status];
+        const status = book.status ? statusConfig[book.status] : undefined;
         const placeholderCover = `https://placehold.co/80x120/1e293b/ffffff?text=${encodeURIComponent(book.title.slice(0, 8))}`;
 
         return (
@@ -69,9 +69,11 @@ export const BooksSection = ({ books }: BooksSectionProps) => {
                 )}
               </Text>
               <Text style={bookAuthor}>by {book.author}</Text>
-              <Text style={{ ...statusBadge, backgroundColor: status.bg, color: status.color }}>
-                {status.label}
-              </Text>
+              {status && (
+                <Text style={{ ...statusBadge, backgroundColor: status.bg, color: status.color }}>
+                  {status.label}
+                </Text>
+              )}
               {book.comment && <Text style={bookComment}>{book.comment}</Text>}
             </Column>
           </Row>

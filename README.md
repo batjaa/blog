@@ -15,6 +15,7 @@ brew install hugo
 ```
 
 Node.js LTS (v20+) is also required for CSS compilation.
+The newsletter photo carousel uses locally compiled Tailwind utilities; the rest of the theme uses Less.
 
 ### Installing
 
@@ -62,6 +63,8 @@ To watch for CSS changes during development:
 ```bash
 npm run css:watch
 ```
+
+After changing newsletter carousel classes, run `npm run css:newsletter` to regenerate its stylesheet. `npm run dev` and `npm run build` also compile it.
 
 ### Building for production
 
@@ -123,6 +126,7 @@ Edit the markdown file in `newsletter/issues/`. The file has two parts:
 title: "February 2026"
 date: 2026-02-01
 featured_image: https://your-cdn.com/hero.jpg
+intro: "Here's what's been happening over the past few months." # Optional; defaults to this month
 
 trading:
   pnl: "+$1,234"
@@ -131,12 +135,15 @@ trading:
 
 movies:
   - url: https://www.imdb.com/title/tt1234567/
-    comment: "Great movie!"
+    title: "Movie or series title" # Optional fallback if metadata is unavailable
+    comment: "Great movie!" # Optional individual reaction
+
+watching_note: "An overall reaction to what I've been watching." # Optional
 
 books:
   - title: "Book Title"
     author: "Author Name"
-    status: reading  # reading | finished | abandoned
+    status: reading  # Optional: reading | finished | abandoned
 ---
 ```
 
@@ -155,9 +162,17 @@ Work updates...
 
 Fitness progress...
 
+## Trading
+
+Market thoughts or lessons (no P&L numbers required)...
+
 ## Travel
 
 Adventures...
+
+## Closing
+
+An optional personal reflection, rendered before the sign-off without a section heading...
 ```
 
 ### Build & Preview
@@ -183,6 +198,14 @@ npm run newsletter:build && npm run build
 The newsletter will be available at `/newsletter/YYYY-MM/` on the site.
 
 ### Images
+
+Consecutive image-only blocks (HTML `<img>` tags or Markdown images, separated by blank lines) form a photo group. Put a paragraph between images to keep them separate.
+
+- On the web, each group becomes a manual carousel with swipe, previous/next buttons, keyboard navigation, a photo count, and a link to the full photo. Images retain their full proportions.
+- In email, the same group is a two-column table of linked photos. The table also remains usable on the web when JavaScript is unavailable.
+- Single images stay in the story. Local site images can live in `static/images/newsletter/YYYY-MM/`; use their absolute `https://batjaa.com/images/newsletter/YYYY-MM/...` URLs in the issue. Those URLs become available after the site is deployed.
+
+Run `npm --prefix newsletter test` to check photo grouping. Drafting prompts belong in `newsletter/notes/`, outside the buildable `newsletter/issues/` folder.
 
 Upload images to S3 (served via CloudFront):
 

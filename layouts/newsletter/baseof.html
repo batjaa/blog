@@ -5,6 +5,8 @@
     <title>{{ .Title }} | {{ .Site.Title }}</title>
     <meta name="description" content="Monthly newsletter from Batjaa - family updates, tech insights, and more">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ $photosCSS := resources.Get "css/newsletter-photos.generated.css" | fingerprint }}
+    <link rel="stylesheet" href="{{ $photosCSS.RelPermalink }}" integrity="{{ $photosCSS.Data.Integrity }}">
 
     {{ if .Site.Params.favicon }}
     <link rel="icon" href="{{ .Site.Params.favicon | absURL }}">

@@ -8,6 +8,7 @@
     "preview": "npm run dev",
     "build": "tsx scripts/build.ts",
     "build:issue": "tsx scripts/build.ts --issue",
+    "test": "tsx --test tests/*.test.ts",
     "send:test": "tsx scripts/send.ts --test",
     "send:broadcast": "tsx scripts/send.ts --broadcast"
   },

@@ -74,6 +74,8 @@ const body: React.CSSProperties = {
 };
 
 const container: React.CSSProperties = {
+  width: "100%",
+  tableLayout: "fixed",
   backgroundColor: "#ffffff",
   maxWidth: "600px",
   margin: "0 auto",
