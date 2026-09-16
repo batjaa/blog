@@ -47,7 +47,7 @@ describe("postmark webhook function", () => {
 
     const event = createMockEvent({
       httpMethod: "POST",
-      body: JSON.stringify({ RecordType: "Bounce", Email: "User@Example.com" }),
+      body: JSON.stringify({ RecordType: "Bounce", Email: "User@Example.com", Type: "HardBounce", Inactive: true }),
       headers: { "x-postmark-server-token": "expected-token" },
     });
     const result = await handler(event, {} as any);
@@ -59,5 +59,33 @@ describe("postmark webhook function", () => {
         args: ["bounce", "user@example.com"],
       })
     );
+  });
+
+  it.each(["SpamNotification", "SoftBounce", "Transient"])("does not suppress an active recipient after %s", async (Type) => {
+    const result = await handler(createMockEvent({
+      body: JSON.stringify({ RecordType: "Bounce", Email: "user@example.com", Type, Inactive: false }),
+    }), {} as any);
+    expect(result.statusCode).toBe(200);
+    expect(mockExecute).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { RecordType: "SpamComplaint", Email: "user@example.com" },
+    { RecordType: "Bounce", Type: "SoftBounce", Inactive: true, Email: "user@example.com" },
+    { RecordType: "SubscriptionChange", SuppressSending: true, Recipient: "user@example.com" },
+  ])("suppresses recipients when Postmark disables sending: %j", async (payload) => {
+    const result = await handler(createMockEvent({ body: JSON.stringify(payload) }), {} as any);
+    expect(result.statusCode).toBe(200);
+    expect(mockExecute).toHaveBeenCalledWith(expect.objectContaining({
+      args: [payload.RecordType.toLowerCase(), "user@example.com"],
+    }));
+  });
+
+  it("does not suppress or reactivate subscribers on a suppression removal notification", async () => {
+    const result = await handler(createMockEvent({
+      body: JSON.stringify({ RecordType: "SubscriptionChange", Recipient: "user@example.com", SuppressSending: false }),
+    }), {} as any);
+    expect(result.statusCode).toBe(200);
+    expect(mockExecute).not.toHaveBeenCalled();
   });
 });

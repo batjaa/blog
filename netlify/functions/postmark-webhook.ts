@@ -5,6 +5,10 @@ import { ensureSubscribersSchema } from "./subscribers";
 interface PostmarkEvent {
   RecordType?: string;
   Email?: string;
+  Recipient?: string;
+  Inactive?: boolean;
+  Type?: string;
+  SuppressSending?: boolean;
 }
 
 function extractEvents(body: unknown): PostmarkEvent[] {
@@ -56,13 +60,17 @@ const handler: Handler = async (event) => {
     await ensureSubscribersSchema(db);
 
     for (const item of events) {
-      const email = item.Email?.toLowerCase().trim();
+      const email = (item.Email || item.Recipient)?.toLowerCase().trim();
       const recordType = (item.RecordType || "").toLowerCase();
       if (!email) {
         continue;
       }
 
-      if (recordType === "bounce" || recordType === "spamcomplaint" || recordType === "subscriptionchange") {
+      const shouldSuppress = recordType === "spamcomplaint"
+        || (recordType === "bounce" && (item.Inactive === true || item.Type === "HardBounce"))
+        || (recordType === "subscriptionchange" && item.SuppressSending === true);
+
+      if (shouldSuppress) {
         await db.execute({
           sql: `
             UPDATE subscribers

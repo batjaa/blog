@@ -25,6 +25,11 @@ on:
         description: 'Issue to send (e.g. 2026-03). Defaults to latest built issue.'
         required: false
         type: string
+      send_interval_seconds:
+        description: 'Seconds between recipients (1–300; default 6 = at most 10/minute)'
+        required: false
+        default: '6'
+        type: string
 
 jobs:
   build:
@@ -49,6 +54,9 @@ jobs:
         env:
           OMDB_API_KEY: ${{ secrets.OMDB_API_KEY }}
 
+      - name: Test newsletter
+        run: npm --prefix newsletter test
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -72,6 +80,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'build-only'
+    concurrency:
+      group: newsletter-send
+      cancel-in-progress: false
+    env:
+      NEWSLETTER_ISSUE: ${{ inputs.issue }}
+      NEWSLETTER_SEND_INTERVAL_SECONDS: ${{ inputs.send_interval_seconds || '6' }}
+      NEWSLETTER_VERSION: ${{ github.sha }}
 
     steps:
       - name: Checkout
@@ -95,7 +110,11 @@ jobs:
 
       - name: Send test email
         if: github.event.inputs.action == 'send-test'
-        run: cd newsletter && npx tsx scripts/send.ts --test ${{ github.event.inputs.issue && format('--issue={0}', github.event.inputs.issue) || '' }}
+        working-directory: newsletter
+        run: |
+          args=(--test)
+          if [ -n "$NEWSLETTER_ISSUE" ]; then args+=("--issue=$NEWSLETTER_ISSUE"); fi
+          npx tsx scripts/send.ts "${args[@]}"
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           TEST_EMAIL_ADDRESS: ${{ secrets.TEST_EMAIL_ADDRESS }}
@@ -105,7 +124,11 @@ jobs:
 
       - name: Send to all subscribers
         if: github.event.inputs.action == 'send-broadcast'
-        run: cd newsletter && npx tsx scripts/send.ts --broadcast ${{ github.event.inputs.issue && format('--issue={0}', github.event.inputs.issue) || '' }}
+        working-directory: newsletter
+        run: |
+          args=(--broadcast)
+          if [ -n "$NEWSLETTER_ISSUE" ]; then args+=("--issue=$NEWSLETTER_ISSUE"); fi
+          npx tsx scripts/send.ts "${args[@]}"
         env:
           POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
           NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
@@ -115,7 +138,20 @@ jobs:
           SITE_URL: https://batjaa.com
 
       - name: Send Summary
+        if: always()
         run: |
-          echo "## Email Sent" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Action:** ${{ github.event.inputs.action }}" >> $GITHUB_STEP_SUMMARY
+          if compgen -G 'newsletter/reports/*.md' > /dev/null; then
+            cat newsletter/reports/*.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '## Newsletter send did not produce a report' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Check the failed setup/send step. Delivery has not been confirmed.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload delivery reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-delivery-report
+          path: newsletter/reports/
+          if-no-files-found: warn
+          retention-days: 14

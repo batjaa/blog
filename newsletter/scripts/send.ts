@@ -6,16 +6,14 @@ import { ServerClient } from "postmark";
 import { createClient } from "@libsql/client/web";
 import { parseIssueFilename, selectSendIssue } from "./issues";
 import { formatIssueDate } from "../templates/components/locale";
+import { randomUUID } from "node:crypto";
+import { setTimeout as sleep } from "node:timers/promises";
+import { errorMessage, monitorDelivery, publicReport, refreshDelivery, renderReport, reportHasProblems, sendPaced, type SendReport } from "./delivery";
 
 // Load .env from project root
-config({ path: path.join(__dirname, "../../.env") });
+config({ path: path.join(__dirname, "../../.env"), quiet: true });
 
 const DIST_DIR = path.join(__dirname, "../dist");
-
-interface SendResult {
-  successful: string[];
-  failed: { email: string; error: string }[];
-}
 
 function createSignedToken(payload: Record<string, unknown>, secret: string): string {
   const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
@@ -69,144 +67,103 @@ function buildSubject(issueSlug: string): string {
   return `${issue.language === "mn" ? "Батжаагийн захидал" : "A letter from Batjaa"} — ${formatted}`;
 }
 
-async function sendNewsletter(issueSlug: string, isTest: boolean): Promise<void> {
-  const apiKey = process.env.POSTMARK_API_KEY;
-  const testEmail = process.env.TEST_EMAIL_ADDRESS;
-  const fromEmail = process.env.NEWSLETTER_FROM_EMAIL || "newsletter@batjaa.com";
-
-  if (!apiKey) {
-    throw new Error("POSTMARK_API_KEY environment variable is required");
-  }
-
-  if (isTest && !testEmail) {
-    throw new Error("TEST_EMAIL_ADDRESS environment variable is required for test sends");
-  }
-
-  const htmlPath = path.join(DIST_DIR, `${issueSlug}.html`);
-  if (!fs.existsSync(htmlPath)) {
-    throw new Error(`Newsletter not built: ${htmlPath}\nRun 'npm run build' first.`);
-  }
-
-  const html = fs.readFileSync(htmlPath, "utf-8");
-  const subject = buildSubject(issueSlug);
-  const client = new ServerClient(apiKey);
-
-  if (isTest) {
-    console.log(`📧 Sending test email to: ${testEmail}`);
-    const testHtml = injectUnsubscribeUrl(html, buildUnsubscribeUrl(testEmail!));
-
-    await client.sendEmail({
-      From: fromEmail,
-      To: testEmail!,
-      Subject: `[TEST] ${subject}`,
-      HtmlBody: testHtml,
-      MessageStream: "outbound",
-      TrackOpens: true,
-    });
-
-    console.log("✅ Test email sent successfully!");
-  } else {
-    // Broadcast to all subscribers
-    const subscribers = await getSubscribers();
-
-    if (subscribers.length === 0) {
-      console.error("❌ No active subscribers found in Turso DB.");
-      process.exit(1);
-    }
-
-    console.log(`📧 Broadcasting to ${subscribers.length} subscribers...`);
-    console.log(`   Subject: ${subject}`);
-    console.log("");
-
-    const results: SendResult = { successful: [], failed: [] };
-
-    // Send in batches of 50 (Postmark recommends batching)
-    const batchSize = 50;
-    for (let i = 0; i < subscribers.length; i += batchSize) {
-      const batch = subscribers.slice(i, i + batchSize);
-
-      const messages = batch.map((email) => {
-        const htmlBody = injectUnsubscribeUrl(html, buildUnsubscribeUrl(email));
-        return {
-          From: fromEmail,
-          To: email,
-          Subject: subject,
-          HtmlBody: htmlBody,
-          MessageStream: "broadcast" as const,
-          TrackOpens: true,
-        };
-      });
-
-      try {
-        const response = await client.sendEmailBatch(messages);
-
-        response.forEach((result, index) => {
-          const email = batch[index];
-          if (result.ErrorCode === 0) {
-            results.successful.push(email);
-          } else {
-            results.failed.push({ email, error: result.Message });
-          }
-        });
-      } catch (err: any) {
-        // If batch fails entirely, mark all as failed
-        batch.forEach((email) => {
-          results.failed.push({ email, error: err.message });
-        });
-      }
-
-      // Progress indicator
-      const sent = Math.min(i + batchSize, subscribers.length);
-      process.stdout.write(`\r   Sent: ${sent}/${subscribers.length}`);
-    }
-
-    console.log("\n");
-
-    // Summary
-    console.log("✅ Broadcast complete!");
-    console.log(`   Successful: ${results.successful.length}`);
-
-    if (results.failed.length > 0) {
-      console.log(`   Failed: ${results.failed.length}`);
-      console.log("");
-      console.log("Failed recipients:");
-      results.failed.forEach(({ email, error }) => {
-        console.log(`   - ${email}: ${error}`);
-      });
-    }
-  }
+function seconds(name: string, fallback: number, min: number, max: number): number {
+  const value = Number(process.env[name] ?? fallback);
+  if (!Number.isFinite(value) || value < min || value > max) throw new Error(`${name} must be between ${min} and ${max} seconds`);
+  return value * 1000;
 }
 
 async function main() {
   const args = process.argv.slice(2);
-
+  if (args.includes("version") || args.includes("--version")) {
+    console.log(process.env.NEWSLETTER_VERSION || "dev");
+    return;
+  }
   const isTest = args.includes("--test");
   const isBroadcast = args.includes("--broadcast");
-  const issueArg = args.find((a) => a.startsWith("--issue="));
-  const language = args.find((a) => a.startsWith("--language="))?.split("=")[1] ?? "en";
-  if (language !== "en" && language !== "mn") throw new Error("Language must be en or mn");
-
-  if (!isTest && !isBroadcast) {
-    console.log("Usage:");
-    console.log("  npm run send:test                    Send to TEST_EMAIL_ADDRESS");
-    console.log("  npm run send:broadcast               Send to all subscribers");
-    console.log("");
-    console.log("Options:");
-    console.log("  --issue=2026-01                      Send specific issue (default: latest in selected language)");
-    console.log("  --language=en                       en (default) or mn; use --issue=2026-01.mn for Mongolian");
-    process.exit(1);
+  const refreshPath = args.find(a => a.startsWith("--report="))?.slice("--report=".length);
+  if (Number(isTest) + Number(isBroadcast) + Number(refreshPath !== undefined) !== 1) {
+    throw new Error("Usage: send.ts --test | --broadcast [--issue=2026-09] [--language=en] | --report=path/to/report.json | version");
   }
-
-  const issueSlug = selectSendIssue(
-    fs.readdirSync(DIST_DIR), language, issueArg?.split("=")[1],
-  );
-
-  console.log(`\n📨 Newsletter: ${issueSlug}\n`);
-
-  await sendNewsletter(issueSlug, isTest);
+  const reportDir = path.resolve(__dirname, "../reports");
+  const outputPath = path.join(reportDir, `${new Date().toISOString().replace(/[:.]/g, "-")}-${randomUUID()}.json`);
+  let report: SendReport = {
+    version: 1, issue: "unresolved", subject: "", stream: isTest ? "outbound" : "broadcast",
+    startedAt: new Date().toISOString(), updatedAt: new Date().toISOString(), recipients: [],
+  };
+  const visibleReport = () => process.env.GITHUB_ACTIONS === "true" ? publicReport(report) : report;
+  const save = () => {
+    report.updatedAt = new Date().toISOString();
+    fs.mkdirSync(reportDir, { recursive: true });
+    fs.writeFileSync(`${outputPath}.tmp`, JSON.stringify(visibleReport(), null, 2) + "\n");
+    fs.renameSync(`${outputPath}.tmp`, outputPath);
+    fs.writeFileSync(outputPath.replace(/\.json$/, ".md"), renderReport(visibleReport()));
+  };
+  try {
+    if (refreshPath !== undefined) {
+      const original = JSON.parse(fs.readFileSync(path.resolve(refreshPath), "utf8")) as SendReport;
+      if (original.version !== 1 || !Array.isArray(original.recipients) || !original.issue || !original.stream) throw new Error("Invalid delivery report");
+      report = original;
+      for (const row of report.recipients) {
+        if (row.status === "submitting") {
+          row.status = "unknown";
+          row.detail = "Previous process stopped during submission. Check Postmark activity before retrying.";
+        }
+      }
+    }
+    save();
+    const options = {
+      intervalMs: seconds("NEWSLETTER_SEND_INTERVAL_SECONDS", 6, 1, 300),
+      pollMs: 10_000,
+      waitMs: seconds("NEWSLETTER_DELIVERY_WAIT_SECONDS", 120, 0, 1800),
+      sleep, now: Date.now, save,
+    };
+    const apiKey = process.env.POSTMARK_API_KEY;
+    if (!apiKey) throw new Error("POSTMARK_API_KEY environment variable is required");
+    const client = new ServerClient(apiKey, { timeout: 30 });
+    const details = (id: string) => client.getOutboundMessageDetails(id);
+    if (refreshPath !== undefined) {
+      await refreshDelivery(report, { details }, options, true);
+      await monitorDelivery(report, { details }, options);
+    } else {
+      const issueArg = args.find(a => a.startsWith("--issue="))?.slice("--issue=".length);
+      const language = args.find(a => a.startsWith("--language="))?.slice("--language=".length) ?? "en";
+      if (language !== "en" && language !== "mn") throw new Error("Language must be en or mn");
+      report.issue = selectSendIssue(fs.readdirSync(DIST_DIR), language, issueArg);
+      report.subject = `${isTest ? "[TEST] " : ""}${buildSubject(report.issue)}`;
+      const html = fs.readFileSync(path.join(DIST_DIR, `${report.issue}.html`), "utf8");
+      if (!process.env.NEWSLETTER_TOKEN_SECRET) throw new Error("NEWSLETTER_TOKEN_SECRET environment variable is required");
+      if (isTest && !process.env.TEST_EMAIL_ADDRESS) throw new Error("TEST_EMAIL_ADDRESS environment variable is required");
+      const subscribers = isTest ? [process.env.TEST_EMAIL_ADDRESS!] : await getSubscribers();
+      report.recipients = subscribers.map(email => ({ email, status: "not_sent" }));
+      save();
+      if (!subscribers.length) throw new Error("No active subscribers found");
+      report.serverId = (await client.getServer()).ID;
+      save();
+      console.log(`Sending ${report.issue} to ${subscribers.length} recipient(s), one every ${options.intervalMs / 1000}s. Report: ${outputPath}`);
+      await sendPaced(report, {
+        details,
+        send: email => client.sendEmail({
+          From: process.env.NEWSLETTER_FROM_EMAIL || "newsletter@batjaa.com",
+          To: email, Subject: report.subject,
+          HtmlBody: injectUnsubscribeUrl(html, buildUnsubscribeUrl(email)),
+          MessageStream: report.stream, TrackOpens: true,
+        }),
+      }, options);
+    }
+  } catch (error) {
+    report.stopReason = errorMessage(error);
+  } finally {
+    report.completedAt = new Date().toISOString();
+    save();
+    const markdown = renderReport(visibleReport());
+    console.log(markdown);
+    console.log(`Report saved: ${outputPath}`);
+    if (reportHasProblems(report)) process.exitCode = 1;
+  }
 }
 
-main().catch((err) => {
-  console.error("Send failed:", err.message);
-  process.exit(1);
+main().catch(error => {
+  console.error("Send failed:", errorMessage(error));
+  process.exitCode = 1;
 });

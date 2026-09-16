@@ -297,6 +297,66 @@ Go to **Actions** → **Newsletter** → **Run workflow** to manually trigger:
 | `send-test` | Build and send to your test email address |
 | `send-broadcast` | Build and send to all subscribers |
 
+#### Delivery reports and sending pace
+
+After either send action, open the **send** job summary for recipient counts,
+delivery status, SMTP error details, and links to each Postmark message. Download
+the **newsletter-delivery-report** artifact for Markdown and JSON copies (kept for
+14 days). Reports are checkpointed during sending and uploaded even when a step
+fails. Local sends save them to `newsletter/reports/`, which is ignored by Git.
+Because this repository is public, Actions reports use numbered recipient labels
+and redact email addresses from error text. Open the authenticated Postmark links
+to identify recipients. Local reports include their addresses.
+
+The sender checks Postmark delivery events after each submission and polls unresolved
+messages for up to two minutes after sending ends. `delivered` means the recipient's
+mail server accepted the message; inbox placement is not known. `accepted` and
+`deferred` remain pending. Bounces, rejections, unknown submissions, unsent recipients,
+and pending delivery make the action fail instead of claiming success.
+
+Refresh a downloaded JSON report without sending any email:
+
+```bash
+cd newsletter
+npx tsx scripts/send.ts --report=/path/to/report.json
+npx tsx scripts/send.ts version
+```
+
+Refresh writes a new report in `newsletter/reports/` and preserves the original.
+Do not rerun a broadcast just to refresh delivery: a new broadcast sends again to
+all active subscribers. For `unknown` or interrupted `submitting` entries, check
+Postmark activity before attempting a resend.
+
+Broadcasts send one recipient at a time, with a six-second pause between submissions
+(at most 10 recipients/minute). Change `send_interval_seconds` in **Run workflow**
+to slow sending further. GitHub serializes send jobs to prevent overlapping sends;
+avoid running a local broadcast at the same time. Local configuration:
+
+| Variable | Default | Range |
+|----------|---------|-------|
+| `NEWSLETTER_SEND_INTERVAL_SECONDS` | `6` | 1–300 seconds |
+| `NEWSLETTER_DELIVERY_WAIT_SECONDS` | `120` | 0–1800 seconds |
+| `NEWSLETTER_VERSION` | `dev` | Injected with the commit SHA in Actions |
+
+If a delivery event reports throttling or deferral, or delivery checks become
+unavailable, the sender stops submitting the remaining recipients. It retries
+definite Postmark HTTP 429 rejections twice, waiting 30 and 60 seconds. Network
+timeouts and server errors are uncertain submissions and are never automatically
+resent, since Postmark might already have accepted them.
+
+Pacing reduces bursts; Gmail has no universal safe sending rate. Follow
+[Google's sender guidance](https://support.google.com/mail/answer/15256272): after
+deferrals, pause for at least 15 minutes, try a single recipient, and resume at a
+lower rate once delivery succeeds. Maintain SPF, DKIM, DMARC, and working unsubscribe
+links. [Postmark's Bulk API](https://postmarkapp.com/bulk-api) offers provider-managed
+pacing but requires account activation; this sender currently uses the regular API.
+
+The subscription webhook suppresses hard bounces, addresses Postmark marks inactive,
+spam complaints, and subscription events with `SuppressSending: true`. Temporary
+bounces with `Inactive: false` do not suppress subscribers. Existing database
+suppressions are not automatically cleared; review their original cause before
+reactivating anyone.
+
 #### Required Secrets
 
 | Secret | Description |
