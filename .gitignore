@@ -11,4 +11,4 @@ node_modules/
 
 newsletter/dist/
 newsletter/reports/
-newsletter/emails/.netlify/
+newsletter/emails/

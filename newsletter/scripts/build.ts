@@ -1,8 +1,8 @@
-import { render } from "@react-email/render";
+import { render } from "react-email";
 import * as fs from "fs";
 import * as path from "path";
 import { config } from "dotenv";
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter";
 import { marked } from "marked";
 import { MonthlyNewsletter } from "../templates/emails/MonthlyNewsletter";
 import { groupPhotos } from "./photos";
@@ -163,7 +163,7 @@ async function buildIssue(filename: string): Promise<void> {
 
   const filepath = path.join(ISSUES_DIR, filename);
   const raw = fs.readFileSync(filepath, "utf-8");
-  const { data, content } = matter(raw);
+  const { data, content } = parseFrontmatter(raw);
   const frontmatter = data as IssueFrontmatter;
 
   // Extract sections from markdown content

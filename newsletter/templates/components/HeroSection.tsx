@@ -1,4 +1,4 @@
-import { Section, Img, Heading, Text } from "@react-email/components";
+import { Section, Img, Heading, Text } from "react-email";
 import * as React from "react";
 
 interface HeroSectionProps {

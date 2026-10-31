@@ -14,7 +14,8 @@ What things you need to install the software and how to install them
 brew install hugo
 ```
 
-Node.js LTS (v20+) is also required for CSS compilation.
+Node.js 24 LTS is required for CSS compilation and newsletter tooling. Use `nvm use`
+to select the version in `.nvmrc`; Netlify and GitHub Actions also use Node 24.
 The newsletter photo carousel uses locally compiled Tailwind utilities; the rest of the theme uses Less.
 
 ### Installing
@@ -24,16 +25,29 @@ Clone the repo and install dependencies:
 ```bash
 git clone git@github.com:batjaa/blog.git
 cd blog
-npm install
+npm ci
 ```
 
-### And coding style tests
+### Dependency and regression checks
 
-Explain what these tests test and why
+```bash
+npm ci
+npm --prefix newsletter ci
+npm audit
+npm --prefix newsletter audit
+npm test
+npm --prefix newsletter test
+npm --prefix newsletter run typecheck
+```
 
-```
-Give an example
-```
+These checks cover subscription functions, newsletter rendering and delivery logic,
+and YAML frontmatter validation. GitHub Actions runs them for pull requests and
+pushes to the main branches. Dependabot checks both npm projects and pinned GitHub
+Actions weekly.
+
+The Tailwind CLI currently pins an older file watcher. The scoped `@parcel/watcher`
+override selects 2.6+ to remove its vulnerable `micromatch`/`braces` dependency chain;
+remove the override once Tailwind updates its own dependency.
 
 ## Development
 
@@ -96,6 +110,10 @@ Configure the following optional features:
 ## Newsletter
 
 Monthly newsletter system that generates both email-ready HTML and a web archive.
+Templates and rendering use the unified React Email 6 package, with `@react-email/ui`
+for previews. The preview reads `newsletter/templates/emails/` directly; the old
+generated `newsletter/emails/` folder is no longer used. Issue metadata is parsed
+as YAML only, with bounded alias expansion and rejection of executable tags.
 
 ### Setup (first time only)
 

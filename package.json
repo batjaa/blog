@@ -4,7 +4,7 @@
   "description": "Personal blog and portfolio site built with Hugo",
   "private": true,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "css:build": "lessc --math=parens-division themes/mongkok/static/css/index.less themes/mongkok/assets/css/index.css && npm run css:newsletter",
@@ -23,16 +23,21 @@
     "css:newsletter": "tailwindcss -i assets/css/newsletter-photos.css -o assets/css/newsletter-photos.generated.css --minify"
   },
   "devDependencies": {
-    "@netlify/functions": "^5.1.2",
+    "@netlify/functions": "^5.3.0",
     "@tailwindcss/cli": "^4.3.3",
-    "@types/node": "^25.2.0",
-    "less": "^4.2.0",
+    "@types/node": "^24.19.2",
+    "less": "^4.9.1",
     "tailwindcss": "^4.3.3",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.12"
   },
   "author": "Batjargal Batbold",
   "license": "MIT",
   "dependencies": {
-    "@libsql/client": "^0.17.0"
+    "@libsql/client": "^0.17.4"
+  },
+  "overrides": {
+    "@tailwindcss/cli": {
+      "@parcel/watcher": "^2.6.0"
+    }
   }
 }

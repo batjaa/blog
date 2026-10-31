@@ -1,4 +1,4 @@
-import { Section, Heading, Text, Img, Link, Row, Column } from "@react-email/components";
+import { Section, Heading, Text, Img, Link, Row, Column } from "react-email";
 import * as React from "react";
 import { newsletterCopy, type NewsletterLanguage } from "./locale";
 

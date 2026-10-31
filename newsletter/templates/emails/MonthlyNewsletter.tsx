@@ -1,4 +1,4 @@
-import { Text, Link, Img, Section, Row, Column } from "@react-email/components";
+import { Text, Link, Img, Section, Row, Column } from "react-email";
 import * as React from "react";
 import {
   Layout,

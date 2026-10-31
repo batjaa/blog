@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { render } from "@react-email/render";
+import { render } from "react-email";
 import { MonthlyNewsletter } from "../templates/emails/MonthlyNewsletter";
 
 test("issue month stays correct across build time zones, including the year boundary", async () => {

@@ -8,6 +8,11 @@ on:
       - 'newsletter/issues/**'
       - 'newsletter/templates/**'
       - 'newsletter/scripts/**'
+      - 'newsletter/tests/**'
+      - 'newsletter/package*.json'
+      - 'newsletter/tsconfig.json'
+      - '.nvmrc'
+      - '.github/workflows/newsletter.yml'
 
   # Manual trigger for sending
   workflow_dispatch:
@@ -31,23 +36,31 @@ on:
         default: '6'
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: 'npm'
           cache-dependency-path: newsletter/package-lock.json
 
       - name: Install dependencies
         run: cd newsletter && npm ci
+
+      - name: Check dependencies and types
+        run: |
+          npm --prefix newsletter audit
+          npm --prefix newsletter run typecheck
 
       - name: Build newsletter
         run: npm run newsletter:build
@@ -58,7 +71,7 @@ jobs:
         run: npm --prefix newsletter test
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: newsletter-html
           path: newsletter/dist/*.html
@@ -90,12 +103,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: 'npm'
           cache-dependency-path: newsletter/package-lock.json
 
@@ -103,7 +116,7 @@ jobs:
         run: cd newsletter && npm ci
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: newsletter-html
           path: newsletter/dist
@@ -149,7 +162,7 @@ jobs:
 
       - name: Upload delivery reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: newsletter-delivery-report
           path: newsletter/reports/

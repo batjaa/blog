@@ -1,4 +1,4 @@
-import { Section, Text, Img, Link } from "@react-email/components";
+import { Section, Text, Img, Link } from "react-email";
 import * as React from "react";
 
 interface Project {
