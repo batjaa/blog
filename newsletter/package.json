@@ -16,7 +16,7 @@
     "@libsql/client": "^0.17.4",
     "dotenv": "^17.4.2",
     "marked": "^15.0.12",
-    "postmark": "^4.0.7",
+    "postmark": "^5.1.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-email": "^6.11.3",
