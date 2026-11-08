@@ -23,7 +23,7 @@
     "css:newsletter": "tailwindcss -i assets/css/newsletter-photos.css -o assets/css/newsletter-photos.generated.css --minify"
   },
   "devDependencies": {
-    "@netlify/functions": "^5.3.0",
+    "@netlify/functions": "^6.1.0",
     "@tailwindcss/cli": "^4.3.3",
     "@types/node": "^24.19.2",
     "less": "^4.9.1",
