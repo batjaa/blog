@@ -4,10 +4,29 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      tailwind:
+        patterns: ["tailwindcss", "@tailwindcss/*"]
+      routine:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # Keep types aligned with the Node 24 runtime in .nvmrc and Netlify.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: npm
     directory: /newsletter
     schedule:
       interval: weekly
+    groups:
+      react-email:
+        patterns: ["react-email", "@react-email/*"]
+      routine:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

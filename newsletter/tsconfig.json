@@ -11,7 +11,6 @@
     "declaration": false,
     "outDir": "./dist",
     "rootDir": ".",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
       "@/components/*": ["./templates/components/*"]

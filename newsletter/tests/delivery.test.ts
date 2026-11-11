@@ -1,5 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
+import { ServerClient } from "postmark";
 import { monitorDelivery, publicReport, refreshDelivery, renderReport, reportHasProblems, sendPaced, type DeliveryClient, type DeliveryOptions, type SendReport } from "../scripts/delivery";
 
 function fixture(count = 3) {
@@ -22,6 +23,70 @@ function fixture(count = 3) {
     details: async () => ({ MessageEvents: [event("Delivered")] }),
   };
   return { report, options, client, waits, sent, event, saves: () => saves };
+}
+
+test("Postmark SDK preserves HTTP throttling and delivery responses", async () => {
+  const f = fixture(1);
+  let submissions = 0;
+  const sdk = new ServerClient("test-token", {
+    timeout: 30,
+    fetch: async (url, init) => {
+      assert.equal(new Headers(init?.headers).get("X-Postmark-Server-Token"), "test-token");
+      if (init?.method === "POST") {
+        assert.equal(JSON.parse(String(init.body)).To, "0@example.com");
+        if (++submissions === 1) return Response.json({ ErrorCode: 429, Message: "Too many requests" }, { status: 429 });
+        return Response.json({ ErrorCode: 0, Message: "OK", MessageID: "sdk-message" });
+      }
+      assert.match(String(url), /messages\/outbound\/sdk-message\/details$/);
+      return Response.json({ MessageEvents: [f.event("Delivered")] });
+    },
+  });
+  await sendPaced(f.report, {
+    send: To => sdk.sendEmail({ From: "sender@example.com", To, Subject: "Test", TextBody: "Test" }),
+    details: id => sdk.getOutboundMessageDetails(id),
+  }, f.options);
+  assert.equal(submissions, 2);
+  assert.deepEqual(f.waits, [30_000, 6000]);
+  assert.equal(f.report.recipients[0].status, "delivered");
+  assert.equal(f.report.recipients[0].messageId, "sdk-message");
+});
+
+for (const failure of ["rejection", "server error", "network error", "timeout"] as const) {
+  test(`Postmark SDK ${failure} stops sending without retrying`, async () => {
+    const f = fixture(2);
+    let submissions = 0;
+    const sdk = new ServerClient("test-token", {
+      timeout: 0.01,
+      fetch: async (_url, init) => {
+        submissions++;
+        if (failure === "network error") throw new TypeError("fetch failed");
+        if (failure === "timeout") {
+          const signal = init?.signal;
+          assert.ok(signal);
+          return new Promise<Response>((_resolve, reject) => {
+            // Keep the event loop alive while the SDK's unref'd timeout fires.
+            const guard = setTimeout(() => reject(new Error("SDK did not abort")), 1000);
+            const abort = () => { clearTimeout(guard); reject(signal.reason); };
+            if (signal.aborted) abort();
+            else signal.addEventListener("abort", abort, { once: true });
+          });
+        }
+        return Response.json({ ErrorCode: 300, Message: "API failure" }, {
+          status: failure === "rejection" ? 422 : 503,
+        });
+      },
+    });
+    await sendPaced(f.report, {
+      send: To => sdk.sendEmail({ From: "sender@example.com", To, Subject: "Test", TextBody: "Test" }),
+      details: id => sdk.getOutboundMessageDetails(id),
+    }, f.options);
+    assert.equal(submissions, 1);
+    assert.deepEqual(f.waits, []);
+    assert.deepEqual(f.report.recipients.map(row => row.status), [
+      failure === "rejection" ? "rejected" : "unknown", "not_sent",
+    ]);
+    if (failure === "timeout") assert.match(f.report.recipients[0].detail!, /timeout|timed out/i);
+  });
 }
 
 test("paces individual recipients and reports confirmed delivery with message IDs", async () => {

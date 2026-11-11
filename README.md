@@ -43,11 +43,13 @@ npm --prefix newsletter run typecheck
 These checks cover subscription functions, newsletter rendering and delivery logic,
 and YAML frontmatter validation. GitHub Actions runs them for pull requests and
 pushes to the main branches. Dependabot checks both npm projects and pinned GitHub
-Actions weekly.
+Actions weekly. Routine minor/patch npm updates are grouped, with Tailwind and
+React Email companion packages kept together. Node type major updates are deferred
+until the Node runtime is upgraded.
 
-The Tailwind CLI currently pins an older file watcher. The scoped `@parcel/watcher`
-override selects 2.6+ to remove its vulnerable `micromatch`/`braces` dependency chain;
-remove the override once Tailwind updates its own dependency.
+Tailwind and its CLI are updated together. Tailwind 4.3.5 includes the patched file
+watcher directly, so no dependency override is needed. Newsletter tooling uses
+TypeScript 7; path aliases are relative to `tsconfig.json` without `baseUrl`.
 
 ## Development
 
@@ -368,6 +370,12 @@ deferrals, pause for at least 15 minutes, try a single recipient, and resume at 
 lower rate once delivery succeeds. Maintain SPF, DKIM, DMARC, and working unsubscribe
 links. [Postmark's Bulk API](https://postmarkapp.com/bulk-api) offers provider-managed
 pacing but requires account activation; this sender currently uses the regular API.
+
+Postmark 5 uses native fetch with a 30-second total request deadline. Timeout and
+network failures remain uncertain submissions and are never automatically resent.
+The SDK transport tests use simulated HTTP responses and do not send email.
+Proxy environment variables are not automatically honored by the SDK; a proxy
+requires a custom fetch implementation.
 
 The subscription webhook suppresses hard bounces, addresses Postmark marks inactive,
 spam complaints, and subscription events with `SuppressSending: true`. Temporary
