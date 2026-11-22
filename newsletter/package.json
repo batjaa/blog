@@ -19,11 +19,11 @@
     "postmark": "^5.1.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-email": "^6.11.11",
+    "react-email": "^6.11.16",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@react-email/ui": "^6.11.11",
+    "@react-email/ui": "^6.11.16",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "tsx": "^4.23.15",
