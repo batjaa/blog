@@ -15,7 +15,7 @@
   "dependencies": {
     "@libsql/client": "^0.18.0",
     "dotenv": "^18.0.10",
-    "marked": "^18.2.0",
+    "marked": "^18.2.1",
     "postmark": "^5.1.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
